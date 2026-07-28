@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSU Volleyball — Athlete Performance Dashboard</title>
+<style>
+  :root{
+    --bg:#f5f6f6;
+    --surface:#ffffff;
+    --white:#ffffff;
+    --surface-2:#f5f6f6;
+    --surface-3:#eceeed;
+    --border:#dde0df;
+    --border-strong:#dde0df;
+    --text-primary:#101314;
+    --text-secondary:#5c635f;
+    --text-muted:#9aa19e;
+    --csu-green:#006747;
+    --csu-green-dim:#e6f0ec;
+    --csu-green-deep:#003824;
+    --success:#1c6b3c;
+    --danger:#a3312b;
+    --warning:#8a6a08;
+    --radius:10px;
+    --radius-sm:7px;
+    --shadow:0 1px 3px rgba(0,0,0,0.08);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text-primary);}
+  header.app-header{
+    background:linear-gradient(135deg,var(--csu-green) 0%,var(--csu-green-deep) 100%);
+    color:var(--white);
+    padding:20px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-mark{
+    width:44px;height:44px;border-radius:8px;background:var(--white);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--csu-green);font-weight:800;font-size:18px;letter-spacing:-0.5px;
+    flex-shrink:0;
+  }
+  .brand h1{margin:0;font-size:19px;font-weight:700;letter-spacing:0.2px;color:var(--white);}
+  .brand p{margin:2px 0 0;font-size:12.5px;color:#c9e3d6;}
+  .header-meta{font-size:12.5px;color:#c9e3d6;text-align:right;}
+
+  nav.tabs{
+    display:flex;gap:2px;background:var(--csu-green-deep);
+    padding:0 24px;overflow-x:auto;
+  }
+  nav.tabs button{
+    background:none;border:none;color:#bcdccb;padding:12px 18px;
+    font-size:13.5px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+  nav.tabs button.active{color:var(--white);border-bottom-color:var(--white);}
+  nav.tabs button:hover{color:var(--white);}
+
+  main{padding:24px 28px 60px;max-width:1400px;margin:0 auto;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;}
+  .toolbar-left h2{margin:0 0 2px;font-size:18px;color:var(--text-primary);}
+  .toolbar-left p{margin:0;font-size:13px;color:var(--text-secondary);}
+  .toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .btn{
+    background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text-primary);
+    padding:8px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .btn:hover{border-color:var(--csu-green);color:var(--csu-green);}
+  .btn-primary{background:var(--csu-green);color:var(--white);border-color:var(--csu-green);}
+  .btn-primary:hover{background:var(--csu-green-deep);color:var(--white);}
+  .btn-danger{color:var(--danger);}
+  .btn-danger:hover{border-color:var(--danger);color:var(--danger);}
+
+  .legend{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--text-secondary);flex-wrap:wrap;}
+  .legend-item{display:flex;align-items:center;gap:5px;}
+
+  .snapshot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:22px;}
+  .snapshot-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+  .snapshot-card .s-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-secondary);margin-bottom:8px;}
+  .snapshot-card .s-value{font-size:24px;font-weight:800;color:var(--text-primary);}
+  .snapshot-card .s-value .s-unit{font-size:13px;font-weight:600;color:var(--text-secondary);margin-left:3px;}
+  .snapshot-card .s-sub{font-size:11.5px;color:var(--text-muted);margin-top:6px;}
+  .snapshot-card .s-sub b{color:var(--text-secondary);}
+
+  .table-wrap{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;border:1px solid var(--border);}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:900px;}
+  thead th{
+    background:var(--surface-2);color:var(--text-secondary);text-align:left;
+    padding:10px 12px;font-weight:700;font-size:11px;text-transform:uppercase;
+    letter-spacing:0.4px;border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  thead th.sortable{cursor:pointer;user-select:none;}
+  thead th.sortable:hover{color:var(--csu-green);}
+  thead th .arrow{font-size:10px;margin-left:3px;opacity:0.7;}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;color:var(--text-primary);}
+  tbody tr{cursor:pointer;}
+  tbody tr:hover{background:var(--surface-2);}
+  tbody tr:last-child td{border-bottom:none;}
+  .metric-cell{font-weight:700;}
+  .tier-green{color:var(--success);}
+  .tier-yellow{color:var(--warning);}
+  .tier-red{color:var(--danger);}
+  .cell-empty{color:var(--text-muted);text-align:center;font-weight:400;}
+  .name-cell{font-weight:700;color:var(--text-primary);}
+  .rank-badge{
+    display:inline-block;min-width:22px;text-align:center;background:var(--surface-3);
+    color:var(--text-secondary);border-radius:6px;padding:2px 6px;font-size:12px;font-weight:700;
+  }
+
+  #leaderTable.filter-strength .col-jump{display:none;}
+  #leaderTable.filter-jump .col-strength{display:none;}
+
+  .filter-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;overflow-x:auto;}
+  .filter-pill{
+    background:var(--surface);border:1px solid var(--border-strong);color:var(--text-secondary);
+    padding:7px 15px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;
+  }
+  .filter-pill.active{background:var(--csu-green);border-color:var(--csu-green);color:var(--white);}
+  .filter-pill:hover:not(.active){border-color:var(--csu-green);color:var(--csu-green);}
+
+  .bar-list-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:26px;overflow-x:auto;}
+  .lb-hit:hover{fill:var(--csu-green-dim);}
+  .bar-list-empty{color:var(--text-secondary);font-size:13px;text-align:center;padding:30px 10px;}
+
+  .trends-wrap{margin-top:28px;}
+  .trend-controls{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+  .field-inline{display:flex;align-items:center;gap:8px;}
+  .field-inline label{font-size:12.5px;font-weight:600;color:var(--text-secondary);}
+  .field-inline select{padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);font-size:13px;background:var(--surface-2);color:var(--text-primary);}
+  .segmented{display:flex;border:1px solid var(--border-strong);border-radius:var(--radius-sm);overflow:hidden;}
+  .segmented button{background:var(--surface-2);border:none;padding:7px 14px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--text-secondary);}
+  .segmented button.active{background:var(--csu-green);color:var(--white);}
+  .athlete-picker{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;max-height:150px;overflow-y:auto;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+  .athlete-chip{display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 12px;border-radius:20px;border:1px solid var(--border-strong);cursor:pointer;user-select:none;background:var(--surface-2);color:var(--text-secondary);}
+  .athlete-chip:hover{border-color:var(--csu-green);}
+  .athlete-chip.selected{background:var(--csu-green-dim);border-color:var(--csu-green);color:var(--csu-green);font-weight:700;}
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
+  .chart-empty{color:var(--text-secondary);font-size:13px;text-align:center;padding:50px 10px;}
+  svg.trend-svg{display:block;}
+  .chart-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+  .chart-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);}
+  .chart-legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+  .trend-arrow{font-size:9px;margin-left:5px;vertical-align:2px;}
+  .trend-up{color:var(--success);}
+  .trend-down{color:var(--danger);}
+  .trend-flat{color:var(--text-muted);}
+
+  /* Profile modal */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);
+    align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:50;
+  }
+  .modal-overlay.active{display:flex;}
+  .modal{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:760px;width:100%;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);overflow:hidden;
+  }
+  .modal-header{
+    background:linear-gradient(135deg,var(--csu-green) 0%,var(--csu-green-deep) 100%);
+    padding:22px 26px;display:flex;justify-content:space-between;align-items:flex-start;
+  }
+  .modal-header h2{margin:0 0 4px;font-size:20px;color:var(--white);}
+  .modal-header .pos-line{font-size:13px;color:#c9e3d6;}
+  .tier-badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;}
+  .tier-badge.tier-green{background:rgba(255,255,255,0.2);color:var(--white);}
+  .tier-badge.tier-yellow{background:rgba(255,255,255,0.2);color:var(--white);}
+  .tier-badge.tier-red{background:rgba(255,255,255,0.2);color:var(--white);}
+  .tier-badge.tier-none{background:rgba(255,255,255,0.14);color:#c9e3d6;}
+  .modal-close{background:rgba(255,255,255,0.15);border:none;color:var(--white);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1;margin-left:12px;}
+  .modal-close:hover{background:rgba(255,255,255,0.3);}
+  .modal-body{padding:22px 26px;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-bottom:20px;font-size:13px;}
+  .info-grid div span.label{display:block;color:var(--text-secondary);font-size:11px;text-transform:uppercase;letter-spacing:0.3px;margin-bottom:2px;}
+  .info-grid div span.value{font-weight:600;color:var(--text-primary);}
+  .metric-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:22px;}
+  .metric-card{border:1px solid var(--border);background:var(--surface-2);border-radius:var(--radius-sm);padding:14px 16px;}
+  .metric-card .m-label{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;font-weight:700;}
+  .metric-card .m-value{font-size:22px;font-weight:800;color:var(--text-primary);}
+  .metric-card .m-value.empty{color:var(--text-muted);font-size:14px;font-weight:600;}
+  .metric-card .m-delta{font-size:12px;font-weight:700;margin-top:4px;}
+  .metric-card .m-delta.pos{color:var(--success);}
+  .metric-card .m-delta.neg{color:var(--danger);}
+  .metric-card .m-delta.zero{color:var(--text-muted);}
+  .metric-card .m-rank{font-size:11.5px;color:var(--text-muted);margin-top:3px;}
+
+  .analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .analysis-card{border:1px solid var(--border);background:var(--surface-2);border-radius:var(--radius);padding:16px;}
+  .analysis-card h3{margin:0 0 2px;font-size:13.5px;color:var(--text-primary);}
+  .analysis-card p.hint{margin:0 0 10px;font-size:11.5px;color:var(--text-muted);}
+  @media (max-width:600px){ .analysis-grid{grid-template-columns:1fr;} }
+
+  /* Data entry form */
+  .form-wrap{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);padding:24px;max-width:820px;}
+  .form-section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--csu-green);margin:22px 0 6px;}
+  .form-section-title:first-child{margin-top:0;}
+  .form-section-hint{font-size:12px;color:var(--text-secondary);margin:0 0 12px;}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px;}
+  .field input,.field select{
+    width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);
+    font-size:13.5px;background:var(--surface-2);color:var(--text-primary);
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--csu-green);}
+  .form-footer{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap;gap:10px;}
+  .form-msg{font-size:13px;color:var(--csu-green);font-weight:600;min-height:18px;}
+  select#entrySelect{max-width:320px;}
+
+  .history-table-wrap{margin-top:8px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+  table.history-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.history-table th{background:var(--surface-2);text-align:left;padding:7px 10px;font-weight:700;font-size:10.5px;text-transform:uppercase;color:var(--text-secondary);border-bottom:1px solid var(--border);}
+  table.history-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text-primary);}
+  table.history-table tr:last-child td{border-bottom:none;}
+  .history-empty{padding:12px;font-size:12.5px;color:var(--text-secondary);}
+  .history-del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;padding:0 4px;}
+
+  .empty-note{background:var(--csu-green-dim);border:1px solid rgba(0,194,120,0.35);color:var(--csu-green);
+    padding:10px 14px;border-radius:var(--radius-sm);font-size:12.5px;margin-bottom:16px;}
+
+  footer.app-footer{text-align:center;padding:20px;font-size:11.5px;color:var(--text-muted);}
+  @media (max-width:640px){
+    .info-grid{grid-template-columns:1fr;}
+    header.app-header{padding:16px;}
+    main{padding:16px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-mark">CSU</div>
+    <div>
+      <h1>Cleveland State Volleyball</h1>
+      <p>Athlete performance dashboard — strength &amp; conditioning</p>
+    </div>
+  </div>
+  <div class="header-meta" id="headerMeta"></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="overview">Team overview</button>
+  <button class="tab-btn" data-tab="leaderboard">Leaderboard &amp; trends</button>
+</nav>
+
+<main>
+
+  <section class="panel active" id="panel-overview">
+    <div class="empty-note">All strength numbers below are from Spring 2026 testing unless a more recent test has been logged. As Fall 2026 results come in, this dashboard automatically shows whether each athlete improved or dropped off from their last test.</div>
+
+    <div class="snapshot-grid" id="snapshotGrid"></div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2>Team overview</h2>
+        <p>Click any athlete to open their full profile. Numbers are colored by tier within the team — top, middle, or bottom third — based on the most recent test on file.</p>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="trend-arrow trend-up" style="font-size:11px;">&#9650;</span>Improved since last test</span>
+        <span class="legend-item"><span class="trend-arrow trend-down" style="font-size:11px;">&#9660;</span>Dropped since last test</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="overviewTable">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Pos.</th>
+            <th>Cl.</th>
+            <th>Back squat</th>
+            <th>Bench press</th>
+            <th>Deadlift</th>
+            <th>Power clean</th>
+            <th>Approach jump (max)</th>
+            <th>Approach jump (avg)</th>
+            <th>Strength score</th>
+          </tr>
+        </thead>
+        <tbody id="overviewBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-leaderboard">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2>Leaderboard</h2>
+        <p>Pick a metric to see the team ranked, top to bottom.</p>
+      </div>
+    </div>
+    <div class="filter-pills" id="barMetricPills"></div>
+    <div class="bar-list-card">
+      <div id="barList"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 style="font-size:16px;">Full comparison table</h2>
+        <p>Click a column header to sort. Filter to strength or jump metrics, or show everything.</p>
+      </div>
+    </div>
+    <div class="filter-pills" id="leaderFilterPills">
+      <button class="filter-pill active" data-filter="all">All metrics</button>
+      <button class="filter-pill" data-filter="strength">Strength</button>
+      <button class="filter-pill" data-filter="jump">Jumps</button>
+    </div>
+    <div class="table-wrap">
+      <table id="leaderTable">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th class="sortable" data-key="no">No.<span class="arrow"></span></th>
+            <th class="sortable" data-key="name">Name<span class="arrow"></span></th>
+            <th class="sortable" data-key="pos">Pos.<span class="arrow"></span></th>
+            <th class="sortable" data-key="cl">Cl.<span class="arrow"></span></th>
+            <th class="sortable col-strength" data-key="backSquat">Back squat<span class="arrow"></span></th>
+            <th class="sortable col-strength" data-key="benchPress">Bench press<span class="arrow"></span></th>
+            <th class="sortable col-strength" data-key="deadlift">Deadlift<span class="arrow"></span></th>
+            <th class="sortable col-strength" data-key="powerClean">Power clean<span class="arrow"></span></th>
+            <th class="sortable col-jump" data-key="jumpMax">Jump (max)<span class="arrow"></span></th>
+            <th class="sortable col-jump" data-key="jumpAvg">Jump (avg)<span class="arrow"></span></th>
+            <th class="sortable col-strength" data-key="score">Strength score<span class="arrow"></span></th>
+          </tr>
+        </thead>
+        <tbody id="leaderBody"></tbody>
+      </table>
+    </div>
+
+    <div class="trends-wrap">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <h2 style="font-size:16px;">Trends over time</h2>
+          <p>Track a metric across every logged test date — team average, or individual athletes side by side.</p>
+        </div>
+      </div>
+      <div class="trend-controls">
+        <div class="field-inline">
+          <label for="trendMetric">Metric</label>
+          <select id="trendMetric"></select>
+        </div>
+        <div class="segmented" id="trendViewToggle">
+          <button data-view="team" class="active">Team average</button>
+          <button data-view="individual">Individual athletes</button>
+        </div>
+      </div>
+      <div class="athlete-picker" id="trendAthletePicker" style="display:none;"></div>
+      <div class="chart-card">
+        <div id="trendChart"></div>
+      </div>
+    </div>
+  </section>
+
+
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalName">—</h2>
+        <div class="pos-line" id="modalPosLine">—</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;">
+        <span class="tier-badge tier-none" id="modalTierBadge">No data</span>
+        <button class="modal-close" id="modalClose">&#10005;</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="info-grid" id="modalInfo"></div>
+      <div class="metric-cards" id="modalMetrics"></div>
+      <div class="analysis-grid">
+        <div class="analysis-card">
+          <h3>Performance radar</h3>
+          <p class="hint" id="radarHint">Percentile rank vs team — higher is better</p>
+          <div id="modalRadar"></div>
+        </div>
+        <div class="analysis-card">
+          <h3>Vs team average</h3>
+          <p class="hint" id="compareHint">Raw values compared to team average, plus the team's top mark</p>
+          <div id="modalCompare"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="app-footer">Cleveland State Volleyball — internal athlete monitoring tool. Numbers current as of the last update from the coaching staff.</footer>
+
+<script>
+(function(){
+
+var METRICS = [
+  {key:'backSquat', label:'Back squat', short:'Squat', unit:'lb', decimals:1, group:'strength'},
+  {key:'benchPress', label:'Bench press', short:'Bench', unit:'lb', decimals:1, group:'strength'},
+  {key:'deadlift', label:'Deadlift', short:'Deadlift', unit:'lb', decimals:1, group:'strength'},
+  {key:'powerClean', label:'Power clean', short:'Clean', unit:'lb', decimals:1, group:'strength'},
+  {key:'jumpMax', label:'Approach jump (max)', short:'Jump max', unit:'in', decimals:1, group:'jump'},
+  {key:'jumpAvg', label:'Approach jump (avg)', short:'Jump avg', unit:'in', decimals:1, group:'jump'}
+];
+var SCORE_METRICS = ['backSquat','benchPress','deadlift','powerClean'];
+var COLOR_CYCLE = ['#006747','#1f6feb','#c2410c','#7c3aed','#be185d','#0891b2','#a16207','#4b5563'];
+
+var RAW_SEED = [
+  {id:'a16', no:16, name:'Abigail Bartolo', pos:'DS', cl:'Fr.', hometown:'Perrysburg, Ohio / Perrysburg', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a17', no:17, name:'Addison Koppelman', pos:'OH', cl:'Fr.', hometown:'Chardon, Ohio / Chardon', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a4', no:4, name:'Alyssa Cerovac', pos:'OH', cl:'Fr.', hometown:'Ancaster, Ontario / Bishop Tonnos Secondary', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a11', no:11, name:'Audrey Ellis', pos:'OH/RS', cl:'Fr.', hometown:'North Canton, Ohio / Hoover', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a1', no:1, name:'Laila Mossey', pos:'DS', cl:'Fr.', hometown:'Aurora, Ill. / Oswego East', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a8', no:8, name:'Sariyah Glanton', pos:'MB', cl:'Fr.', hometown:'St. Louis, Mo. / Hazelwood East', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a26', no:26, name:'Sophie Butler', pos:'MB', cl:'Fr.', hometown:'Toronto, Canada / Birchmont Park Collegiate', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a0', no:0, name:'Jazen Debina', pos:'RS', cl:'Gr.', hometown:'Las Vegas, Nev. / Liberty', prevSchool:'Colorado State', backSquat:172.2, benchPress:127.8, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a15', no:15, name:'Fiona Cooper', pos:'S', cl:'Jr.', hometown:'Richfield, Ohio / Revere', prevSchool:'Wright State', backSquat:116.7, benchPress:116.7, deadlift:194.4, powerClean:106.2, jumpMax:null, jumpAvg:null},
+  {id:'a10', no:10, name:'Julia Jozefov', pos:'MB', cl:'Jr.', hometown:'Brunswick, Ohio / Brunswick', prevSchool:'', backSquat:183.3, benchPress:111.1, deadlift:211.1, powerClean:131.2, jumpMax:null, jumpAvg:null},
+  {id:'a7', no:7, name:'Vayda Delventhal', pos:'DS', cl:'Jr.', hometown:'Northwood, Ohio / Lake', prevSchool:'', backSquat:172.2, benchPress:116.7, deadlift:227.8, powerClean:118.8, jumpMax:null, jumpAvg:null},
+  {id:'a3', no:3, name:'Sophie Skidmore', pos:'OH', cl:'R-Fr.', hometown:'Hudson, Ohio / Hudson', prevSchool:'', backSquat:158.8, benchPress:111.8, deadlift:211.1, powerClean:131.2, jumpMax:null, jumpAvg:null},
+  {id:'a24', no:24, name:'Allison Salazar', pos:'S', cl:'R-So.', hometown:'Medina, Ohio / Buckeye', prevSchool:'', backSquat:172.2, benchPress:127.8, deadlift:227.8, powerClean:118.8, jumpMax:null, jumpAvg:null},
+  {id:'a6', no:6, name:'Bryn VanVleet', pos:'OH', cl:'So.', hometown:'Richmond, Ind. / Seton Catholic', prevSchool:'', backSquat:227.8, benchPress:133.3, deadlift:194.4, powerClean:118.8, jumpMax:null, jumpAvg:null},
+  {id:'a13', no:13, name:'Danica McArthur', pos:'DS', cl:'So.', hometown:'Avon Lake, Ohio / Avon Lake', prevSchool:'', backSquat:150.0, benchPress:94.4, deadlift:194.4, powerClean:106.2, jumpMax:null, jumpAvg:null},
+  {id:'a9', no:9, name:'Magaly Lemus', pos:'MB', cl:'So.', hometown:'Holland, Mich. / West Ottawa', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
+  {id:'a2', no:2, name:'JeriLynn Koehler', pos:'MB', cl:'Sr.', hometown:'New Lexington, Ohio / New Lexington', prevSchool:'', backSquat:150.0, benchPress:105.6, deadlift:183.3, powerClean:106.2, jumpMax:null, jumpAvg:null},
+  {id:'a14', no:14, name:'Reilly Wadden', pos:'DS', cl:'Sr.', hometown:'Lakewood, Ohio / Saint Joseph Academy', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null}
+];
+
+var SEED_DATE = '2026-04-01';
+
+function buildSeedData(){
+  return RAW_SEED.map(function(r){
+    var hasAny = SCORE_METRICS.concat(['jumpMax','jumpAvg']).some(function(k){ return r[k]!==null && r[k]!==undefined; });
+    var history = hasAny ? [{
+      date:SEED_DATE, label:'Spring 2026',
+      backSquat:r.backSquat, benchPress:r.benchPress, deadlift:r.deadlift, powerClean:r.powerClean,
+      jumpMax:r.jumpMax, jumpAvg:r.jumpAvg
+    }] : [];
+    return {id:r.id, no:r.no, name:r.name, pos:r.pos, cl:r.cl, hometown:r.hometown, prevSchool:r.prevSchool, history:history};
+  });
+}
+
+var athletes = [];
+var currentSort = {key:'score', dir:'desc'};
+var leaderFilter = 'all';
+var barMetric = 'score';
+var trendState = {metric:'score', view:'team', selected:{}};
+
+function loadData(){
+  athletes = buildSeedData();
+}
+
+function round1(n){ return Math.round(n*10)/10; }
+
+function historyEntries(a){
+  return (a.history||[]).slice().sort(function(x,y){
+    return x.date<y.date ? -1 : (x.date>y.date ? 1 : 0);
+  });
+}
+
+function curVal(a, key){
+  var hist = historyEntries(a);
+  for(var i=hist.length-1;i>=0;i--){
+    var v = hist[i][key];
+    if(v!==null && v!==undefined && !isNaN(v)) return v;
+  }
+  return null;
+}
+
+function scoreAtEntry(entry){
+  var vals = SCORE_METRICS.map(function(k){return entry[k];}).filter(function(v){return v!==null && v!==undefined && !isNaN(v);});
+  if(vals.length===0) return null;
+  return round1(vals.reduce(function(s,v){return s+v;},0)/vals.length);
+}
+
+function computeScore(a){
+  var vals = SCORE_METRICS.map(function(k){ return curVal(a,k); })
+    .filter(function(v){return v!==null && v!==undefined && !isNaN(v);});
+  if(vals.length===0) return null;
+  return round1(vals.reduce(function(s,v){return s+v;},0)/vals.length);
+}
+
+function valFor(a, key){
+  return key==='score' ? computeScore(a) : curVal(a, key);
+}
+
+function tiersFor(key){
+  var vals = athletes.map(function(a){ return {id:a.id, v:valFor(a,key)}; })
+    .filter(function(x){return x.v!==null && x.v!==undefined && !isNaN(x.v);});
+  vals.sort(function(a,b){return b.v-a.v;});
+  var n = vals.length;
+  var map = {};
+  vals.forEach(function(x,idx){
+    var pos = idx/n;
+    var tier = pos < 1/3 ? 'green' : (pos < 2/3 ? 'yellow' : 'red');
+    map[x.id] = tier;
+  });
+  return map;
+}
+
+function rankFor(key, pool){
+  pool = pool || athletes;
+  var vals = pool.map(function(a){ return {id:a.id, v:valFor(a,key)}; })
+    .filter(function(x){return x.v!==null && x.v!==undefined && !isNaN(x.v);});
+  vals.sort(function(a,b){return b.v-a.v;});
+  var map = {};
+  vals.forEach(function(x,idx){ map[x.id] = idx+1; });
+  return {ranks:map, total:vals.length};
+}
+
+function avgFor(key, pool){
+  pool = pool || athletes;
+  var vals = pool.map(function(a){ return valFor(a,key); })
+    .filter(function(v){return v!==null && v!==undefined && !isNaN(v);});
+  if(vals.length===0) return null;
+  return round1(vals.reduce(function(s,v){return s+v;},0)/vals.length);
+}
+
+function topPerformer(key, pool){
+  pool = pool || athletes;
+  var best = null;
+  pool.forEach(function(p){
+    var v = valFor(p,key);
+    if(v!==null && v!==undefined && !isNaN(v) && (best===null || v>best.value)){
+      best = {id:p.id, name:p.name, value:v};
+    }
+  });
+  return best;
+}
+
+function valueSequence(a, key){
+  var hist = historyEntries(a);
+  var seq = [];
+  hist.forEach(function(h){
+    var v = key==='score' ? scoreAtEntry(h) : h[key];
+    if(v!==null && v!==undefined && !isNaN(v)) seq.push({date:h.date, value:v});
+  });
+  return seq;
+}
+
+function trendArrowHtml(a, key){
+  var seq = valueSequence(a, key);
+  if(seq.length<2) return '';
+  var diff = round1(seq[seq.length-1].value - seq[seq.length-2].value);
+  if(diff>0) return '<span class="trend-arrow trend-up" title="Up '+diff.toFixed(1)+' since last test">&#9650;</span>';
+  if(diff<0) return '<span class="trend-arrow trend-down" title="Down '+Math.abs(diff).toFixed(1)+' since last test">&#9660;</span>';
+  return '<span class="trend-arrow trend-flat" title="No change since last test">&#8211;</span>';
+}
+
+function cellHtml(val, tier, decimals, extraClass, trendHtml){
+  var tdClass = extraClass || '';
+  if(val===null||val===undefined||isNaN(val)){
+    return '<td class="cell-empty'+(tdClass?' '+tdClass:'')+'">&mdash;</td>';
+  }
+  var cls = tier ? ('metric-cell tier-'+tier) : 'metric-cell';
+  return '<td'+(tdClass?' class="'+tdClass+'"':'')+'><span class="'+cls+'">'+val.toFixed(decimals!==undefined?decimals:1)+'</span>'+(trendHtml||'')+'</td>';
+}
+
+function escapeHtml(s){
+  if(s===null||s===undefined) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function tierLabel(t){
+  if(t==='green') return 'Elite';
+  if(t==='yellow') return 'Solid';
+  if(t==='red') return 'Developing';
+  return 'No data';
+}
+
+function metricMeta(key){
+  if(key==='score') return {key:'score', label:'Strength score', short:'Score', unit:'lb', decimals:1};
+  return METRICS.find(function(m){return m.key===key;});
+}
+
+/* --- Team snapshot cards --- */
+function renderSnapshot(){
+  var wrap = document.getElementById('snapshotGrid');
+  var keys = METRICS.map(function(m){return m.key;}).concat(['score']);
+  wrap.innerHTML = keys.map(function(key){
+    var meta = metricMeta(key);
+    var avg = avgFor(key);
+    var rankInfo = rankFor(key);
+    var topId = Object.keys(rankInfo.ranks).find(function(id){return rankInfo.ranks[id]===1;});
+    var topAthlete = topId ? athletes.find(function(a){return a.id===topId;}) : null;
+    var topVal = topAthlete ? valFor(topAthlete,key) : null;
+    var valueHtml = avg!==null ? avg.toFixed(meta.decimals)+'<span class="s-unit">'+meta.unit+'</span>' : '&mdash;';
+    var subHtml = avg!==null
+      ? 'Team avg'+(topAthlete? ' &middot; Top: <b>'+escapeHtml(topAthlete.name)+'</b> ('+topVal.toFixed(meta.decimals)+')' : '')
+      : 'No data yet';
+    return '<div class="snapshot-card"><div class="s-label">'+meta.label+'</div>'+
+      '<div class="s-value">'+valueHtml+'</div>'+
+      '<div class="s-sub">'+subHtml+'</div></div>';
+  }).join('');
+}
+
+/* --- Overview table --- */
+function renderOverview(){
+  var tiers = {};
+  var allKeys = SCORE_METRICS.concat(['jumpMax','jumpAvg','score']);
+  allKeys.forEach(function(k){ tiers[k] = tiersFor(k); });
+
+  var body = document.getElementById('overviewBody');
+  var rows = athletes.slice().sort(function(a,b){ return (a.no||0)-(b.no||0); });
+  body.innerHTML = rows.map(function(a){
+    var score = computeScore(a);
+    var tds = '';
+    tds += '<td>'+ (a.no!==null&&a.no!==undefined ? a.no : '&mdash;') +'</td>';
+    tds += '<td class="name-cell">'+escapeHtml(a.name)+'</td>';
+    tds += '<td>'+escapeHtml(a.pos||'')+'</td>';
+    tds += '<td>'+escapeHtml(a.cl||'')+'</td>';
+    tds += cellHtml(curVal(a,'backSquat'), tiers.backSquat[a.id], 1, '', trendArrowHtml(a,'backSquat'));
+    tds += cellHtml(curVal(a,'benchPress'), tiers.benchPress[a.id], 1, '', trendArrowHtml(a,'benchPress'));
+    tds += cellHtml(curVal(a,'deadlift'), tiers.deadlift[a.id], 1, '', trendArrowHtml(a,'deadlift'));
+    tds += cellHtml(curVal(a,'powerClean'), tiers.powerClean[a.id], 1, '', trendArrowHtml(a,'powerClean'));
+    tds += cellHtml(curVal(a,'jumpMax'), tiers.jumpMax[a.id], 1, '', trendArrowHtml(a,'jumpMax'));
+    tds += cellHtml(curVal(a,'jumpAvg'), tiers.jumpAvg[a.id], 1, '', trendArrowHtml(a,'jumpAvg'));
+    tds += cellHtml(score, tiers.score[a.id], 1, '', trendArrowHtml(a,'score'));
+    return '<tr data-id="'+a.id+'">'+tds+'</tr>';
+  }).join('');
+
+  Array.prototype.forEach.call(body.querySelectorAll('tr'), function(tr){
+    tr.addEventListener('click', function(){ openProfile(tr.getAttribute('data-id')); });
+  });
+}
+
+/* --- Bar-chart leaderboard --- */
+function populateBarMetricPills(){
+  var wrap = document.getElementById('barMetricPills');
+  var options = [{key:'score', label:'Strength score'}].concat(METRICS.map(function(m){return {key:m.key,label:m.label};}));
+  wrap.innerHTML = options.map(function(o){
+    return '<button class="filter-pill'+(o.key===barMetric?' active':'')+'" data-metric="'+o.key+'">'+o.label+'</button>';
+  }).join('');
+  Array.prototype.forEach.call(wrap.querySelectorAll('.filter-pill'), function(btn){
+    btn.addEventListener('click', function(){
+      Array.prototype.forEach.call(wrap.querySelectorAll('.filter-pill'), function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      barMetric = btn.getAttribute('data-metric');
+      renderBarList();
+    });
+  });
+}
+
+function buildLeaderboardChartSVG(rows, meta, width){
+  width = width || 700;
+  var rowH = 28, barH = 13;
+  var topPad = 8, bottomPad = 26;
+  var nameColW = 150, rightPad = 62;
+  var plotW = width - nameColW - rightPad;
+  var height = topPad + bottomPad + rows.length*rowH;
+  var maxV = rows[0].v * 1.14;
+  if(maxV<=0) maxV = 1;
+
+  function barLen(v){ return (v/maxV)*plotW; }
+
+  var svg = '<svg viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'" xmlns="http://www.w3.org/2000/svg">';
+
+  var ticks = 4;
+  for(var t=0;t<=ticks;t++){
+    var tv = maxV*(t/ticks);
+    var tx = nameColW + barLen(tv);
+    svg += '<line x1="'+tx+'" y1="'+topPad+'" x2="'+tx+'" y2="'+(height-bottomPad)+'" stroke="#eceeed" stroke-width="1"/>';
+    svg += '<text x="'+tx+'" y="'+(height-bottomPad+15)+'" text-anchor="middle" font-size="11" fill="#5c635f">'+tv.toFixed(0)+'</text>';
+  }
+  svg += '<line x1="'+nameColW+'" y1="'+topPad+'" x2="'+nameColW+'" y2="'+(height-bottomPad)+'" stroke="#dde0df" stroke-width="1"/>';
+
+  rows.forEach(function(row, idx){
+    var rank = idx+1;
+    var rowY = topPad + idx*rowH;
+    var barY = rowY + (rowH-barH)/2;
+    var len = Math.max(2, barLen(row.v));
+    var rankColor = rank===1?'#b45309':(rank===2?'#6b7280':(rank===3?'#a15c2e':'#9aa19e'));
+
+    svg += '<g class="lb-row" data-id="'+row.a.id+'" style="cursor:pointer;">';
+    svg += '<rect x="0" y="'+rowY+'" width="'+width+'" height="'+rowH+'" fill="transparent" class="lb-hit"/>';
+    svg += '<text x="10" y="'+(rowY+rowH/2+4)+'" font-size="12" font-weight="700" fill="'+rankColor+'">'+rank+'</text>';
+    svg += '<text x="30" y="'+(rowY+rowH/2+4)+'" font-size="13" font-weight="700" fill="#101314">'+escapeHtml(row.a.name)+'</text>';
+    svg += '<rect x="'+nameColW+'" y="'+barY+'" width="'+len+'" height="'+barH+'" rx="3" fill="#006747"/>';
+    svg += '<text x="'+(nameColW+len+8)+'" y="'+(rowY+rowH/2+4)+'" font-size="13" font-weight="700" fill="#101314">'+row.v.toFixed(meta.decimals)+' <tspan font-size="11" font-weight="600" fill="#5c635f">'+meta.unit+'</tspan></text>';
+    svg += '</g>';
+  });
+
+  svg += '</svg>';
+  return svg;
+}
+
+function renderBarList(){
+  var meta = metricMeta(barMetric);
+  var rows = athletes.map(function(a){ return {a:a, v:valFor(a,barMetric)}; })
+    .filter(function(x){return x.v!==null && x.v!==undefined && !isNaN(x.v);})
+    .sort(function(x,y){return y.v-x.v;});
+  var container = document.getElementById('barList');
+  if(rows.length===0){
+    container.innerHTML = '<div class="bar-list-empty">No test data logged yet for '+meta.label.toLowerCase()+'.</div>';
+    return;
+  }
+  var w = container.clientWidth || 700;
+  container.innerHTML = buildLeaderboardChartSVG(rows, meta, w);
+  Array.prototype.forEach.call(container.querySelectorAll('.lb-row'), function(row){
+    row.addEventListener('click', function(){ openProfile(row.getAttribute('data-id')); });
+  });
+}
+
+/* --- Full comparison table --- */
+function renderLeaderboard(){
+  var tiers = {};
+  var allKeys = SCORE_METRICS.concat(['jumpMax','jumpAvg','score']);
+  allKeys.forEach(function(k){ tiers[k] = tiersFor(k); });
+
+  var key = currentSort.key;
+  var dir = currentSort.dir;
+  var rows = athletes.slice().sort(function(a,b){
+    var av, bv;
+    if(key==='name'||key==='pos'||key==='cl'){
+      av = (a[key]||'').toLowerCase(); bv = (b[key]||'').toLowerCase();
+      if(av<bv) return dir==='asc'?-1:1;
+      if(av>bv) return dir==='asc'?1:-1;
+      return 0;
+    }
+    if(key==='no'){
+      av = a.no===null||a.no===undefined ? Infinity : a.no;
+      bv = b.no===null||b.no===undefined ? Infinity : b.no;
+      return dir==='asc' ? av-bv : bv-av;
+    }
+    av = valFor(a,key);
+    bv = valFor(b,key);
+    var aMissing = (av===null||av===undefined||isNaN(av));
+    var bMissing = (bv===null||bv===undefined||isNaN(bv));
+    if(aMissing && bMissing) return 0;
+    if(aMissing) return 1;
+    if(bMissing) return -1;
+    return dir==='asc' ? av-bv : bv-av;
+  });
+
+  var body = document.getElementById('leaderBody');
+  body.innerHTML = rows.map(function(a, idx){
+    var score = computeScore(a);
+    var tds = '';
+    tds += '<td><span class="rank-badge">'+(idx+1)+'</span></td>';
+    tds += '<td>'+ (a.no!==null&&a.no!==undefined ? a.no : '&mdash;') +'</td>';
+    tds += '<td class="name-cell">'+escapeHtml(a.name)+'</td>';
+    tds += '<td>'+escapeHtml(a.pos||'')+'</td>';
+    tds += '<td>'+escapeHtml(a.cl||'')+'</td>';
+    tds += cellHtml(curVal(a,'backSquat'), tiers.backSquat[a.id], 1, 'col-strength', trendArrowHtml(a,'backSquat'));
+    tds += cellHtml(curVal(a,'benchPress'), tiers.benchPress[a.id], 1, 'col-strength', trendArrowHtml(a,'benchPress'));
+    tds += cellHtml(curVal(a,'deadlift'), tiers.deadlift[a.id], 1, 'col-strength', trendArrowHtml(a,'deadlift'));
+    tds += cellHtml(curVal(a,'powerClean'), tiers.powerClean[a.id], 1, 'col-strength', trendArrowHtml(a,'powerClean'));
+    tds += cellHtml(curVal(a,'jumpMax'), tiers.jumpMax[a.id], 1, 'col-jump', trendArrowHtml(a,'jumpMax'));
+    tds += cellHtml(curVal(a,'jumpAvg'), tiers.jumpAvg[a.id], 1, 'col-jump', trendArrowHtml(a,'jumpAvg'));
+    tds += cellHtml(score, tiers.score[a.id], 1, 'col-strength', trendArrowHtml(a,'score'));
+    return '<tr data-id="'+a.id+'">'+tds+'</tr>';
+  }).join('');
+
+  Array.prototype.forEach.call(body.querySelectorAll('tr'), function(tr){
+    tr.addEventListener('click', function(){ openProfile(tr.getAttribute('data-id')); });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('#leaderTable thead th.sortable'), function(th){
+    var arrow = th.querySelector('.arrow');
+    if(th.getAttribute('data-key')===key){
+      arrow.textContent = dir==='asc' ? '\u2191' : '\u2193';
+    } else {
+      arrow.textContent = '';
+    }
+  });
+
+  document.getElementById('leaderTable').className = leaderFilter==='all' ? '' : 'filter-'+leaderFilter;
+}
+
+/* --- Radar chart (percentile) --- */
+function buildRadarSVG(a){
+  var axes = METRICS;
+  var n = axes.length;
+  var size = 280, center = size/2, radius = 96;
+  var angleStep = (2*Math.PI)/n;
+  function pt(i, pct){
+    var angle = -Math.PI/2 + i*angleStep;
+    var r = radius*(pct/100);
+    return [center + r*Math.cos(angle), center + r*Math.sin(angle)];
+  }
+  var svg = '<svg viewBox="0 0 '+size+' '+size+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">';
+
+  [25,50,75,100].forEach(function(ring){
+    var poly = axes.map(function(m,i){ return pt(i, ring).join(','); }).join(' ');
+    svg += '<polygon points="'+poly+'" fill="none" stroke="#dde0df" stroke-width="1"/>';
+  });  axes.forEach(function(m,i){
+    var p = pt(i,100);
+    var hasVal = curVal(a,m.key)!==null;
+    svg += '<line x1="'+center+'" y1="'+center+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#dde0df" stroke-width="1"'+(hasVal?'':' stroke-dasharray="3 3"')+'/>';
+    var lp = pt(i,118);
+    var anchor = Math.abs(lp[0]-center)<4 ? 'middle' : (lp[0]>center ? 'start' : 'end');
+    var labelText = hasVal ? m.short : m.short+' (not tested)';
+    svg += '<text x="'+lp[0]+'" y="'+(lp[1]+3)+'" text-anchor="'+anchor+'" font-size="10.5" fill="'+(hasVal?'#5c635f':'#9aa19e')+'"'+(hasVal?'':' font-style="italic"')+'>'+labelText+'</text>';
+  });
+
+  var avgPoly = axes.map(function(m,i){ return pt(i,50).join(','); }).join(' ');
+  svg += '<polygon points="'+avgPoly+'" fill="rgba(16,19,20,0.04)" stroke="#9aa19e" stroke-width="1.5" stroke-dasharray="4 3"/>';
+
+  var rankInfoCache = {};
+  function pctFor(m){
+    if(!rankInfoCache[m.key]) rankInfoCache[m.key] = rankFor(m.key);
+    var ri = rankInfoCache[m.key];
+    var rank = ri.ranks[a.id];
+    if(!rank) return 0;
+    return ri.total>1 ? round1(((ri.total-rank)/(ri.total-1))*100) : 100;
+  }
+
+  var athletePoly = axes.map(function(m,i){ return pt(i, pctFor(m)).join(','); }).join(' ');
+  svg += '<polygon points="'+athletePoly+'" fill="rgba(0,103,71,0.15)" stroke="#006747" stroke-width="2"/>';
+  axes.forEach(function(m,i){
+    var hasVal = curVal(a,m.key)!==null;
+    if(!hasVal) return;
+    var p = pt(i, pctFor(m));
+    svg += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="#006747"/>';
+  });
+
+  [25,50,75].forEach(function(ring){
+    var ringY = center - radius*(ring/100);
+    svg += '<rect x="'+(center+3)+'" y="'+(ringY-6.5)+'" width="24" height="11" fill="#ffffff" opacity="0.9"/>';
+    svg += '<text x="'+(center+5)+'" y="'+(ringY+2.5)+'" font-size="8.5" fill="#9aa19e">'+ring+'%</text>';
+  });
+  svg += '<rect x="'+(center+3)+'" y="'+(center-radius-6.5)+'" width="30" height="11" fill="#ffffff" opacity="0.9"/>';
+  svg += '<text x="'+(center+5)+'" y="'+(center-radius+2.5)+'" font-size="8.5" fill="#5c635f" font-weight="700">100%</text>';
+
+  svg += '</svg>';
+  svg += '<div class="chart-legend">'+
+    '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#006747"></span>'+escapeHtml(a.name)+'</span>'+
+    '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#9aa19e"></span>Team average</span>'+
+    '</div>';
+  return svg;
+}
+
+/* --- Grouped bar comparison (raw values) --- */
+function buildCompareSVG(a){
+  var axes = METRICS;
+  var width = 320, height = 260;
+  var marginLeft = 30, marginRight = 10, marginTop = 20, marginBottom = 46;
+  var plotW = width - marginLeft - marginRight;
+  var plotH = height - marginTop - marginBottom;
+  var groupW = plotW/axes.length;
+  var barW = Math.min(11, groupW*0.19);
+  var gap = 3;
+
+  var bars = axes.map(function(m){
+    var av = curVal(a,m.key);
+    var avg = avgFor(m.key);
+    var top = topPerformer(m.key);
+    var topV = top ? top.value : null;
+    var maxV = Math.max(av||0, avg||0, topV||0) * 1.22;
+    if(maxV<=0) maxV = 1;
+    return {meta:m, av:av, avg:avg, top:top, maxV:maxV};
+  });
+
+  var svg = '<svg viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">';
+  svg += '<line x1="'+marginLeft+'" y1="'+(height-marginBottom)+'" x2="'+(width-marginRight)+'" y2="'+(height-marginBottom)+'" stroke="#dde0df" stroke-width="1"/>';
+
+  bars.forEach(function(b,i){
+    var gx = marginLeft + i*groupW + groupW/2;
+    var totalW = barW*3 + gap*2;
+    var startX = gx - totalW/2;
+    var hasAv = b.av!==null && b.av!==undefined;
+    var hasAvg = b.avg!==null && b.avg!==undefined;
+    var hasTop = !!b.top;
+    if(hasAv){
+      var h1 = (b.av/b.maxV)*plotH;
+      var y1 = height-marginBottom-h1;
+      svg += '<rect x="'+startX+'" y="'+y1+'" width="'+barW+'" height="'+h1+'" fill="#006747" rx="2"/>';
+      svg += '<text x="'+(startX+barW/2)+'" y="'+(y1-4)+'" text-anchor="middle" font-size="8.5" fill="#006747" font-weight="700">'+b.av.toFixed(0)+'</text>';
+    }
+    if(hasAvg){
+      var h2 = (b.avg/b.maxV)*plotH;
+      var y2 = height-marginBottom-h2;
+      svg += '<rect x="'+(startX+barW+gap)+'" y="'+y2+'" width="'+barW+'" height="'+h2+'" fill="#c3cac7" rx="2"/>';
+      svg += '<text x="'+(startX+barW+gap+barW/2)+'" y="'+(y2-4)+'" text-anchor="middle" font-size="8.5" fill="#5c635f">'+b.avg.toFixed(0)+'</text>';
+    }
+    if(hasTop){
+      var h3 = (b.top.value/b.maxV)*plotH;
+      var y3 = height-marginBottom-h3;
+      svg += '<rect x="'+(startX+2*(barW+gap))+'" y="'+y3+'" width="'+barW+'" height="'+h3+'" fill="#b45309" rx="2"/>';
+      svg += '<text x="'+(startX+2*(barW+gap)+barW/2)+'" y="'+(y3-4)+'" text-anchor="middle" font-size="8.5" fill="#b45309" font-weight="700">'+b.top.value.toFixed(0)+'</text>';
+    }
+    svg += '<text x="'+gx+'" y="'+(height-marginBottom+16)+'" text-anchor="middle" font-size="10" fill="#5c635f">'+b.meta.short+'</text>';
+  });
+
+  svg += '</svg>';
+  svg += '<div class="chart-legend">'+
+    '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#006747"></span>'+escapeHtml(a.name)+'</span>'+
+    '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#9aa19e"></span>Team average</span>'+
+    '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#b45309"></span>Team top mark</span>'+
+    '</div>';
+
+  var topRows = bars.filter(function(b){ return !!b.top; }).map(function(b){
+    return '<div style="display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0;">'+
+      '<span style="color:var(--text-secondary);">'+b.meta.label+'</span>'+
+      '<span><b>'+escapeHtml(b.top.name)+'</b> \u2014 '+b.top.value.toFixed(1)+' '+b.meta.unit+'</span>'+
+      '</div>';
+  }).join('');
+  if(topRows){
+    svg += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">'+
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-secondary);margin-bottom:4px;">Who holds the top mark</div>'+
+      topRows+'</div>';
+  }
+  return svg;
+}
+
+function openProfile(id){
+  var a = athletes.find(function(x){return x.id===id;});
+  if(!a) return;
+
+  document.getElementById('modalName').textContent = a.name;
+  document.getElementById('modalPosLine').textContent = [a.pos, a.cl].filter(Boolean).join(' \u00b7 ') + (a.no!==null&&a.no!==undefined?(' \u00b7 No. '+a.no):'');
+
+  var scoreTiersMap = tiersFor('score');
+  var overallTier = scoreTiersMap[a.id];
+  var badge = document.getElementById('modalTierBadge');
+  badge.className = 'tier-badge ' + (overallTier ? 'tier-'+overallTier : 'tier-none');
+  badge.textContent = overallTier ? tierLabel(overallTier) : 'No data';
+
+  var info = document.getElementById('modalInfo');
+  info.innerHTML = [
+    ['Position', a.pos||'\u2014'],
+    ['Class', a.cl||'\u2014'],
+    ['Number', a.no!==null&&a.no!==undefined?a.no:'\u2014'],
+    ['Hometown / high school', a.hometown||'\u2014'],
+    ['Previous school', a.prevSchool||'\u2014']
+  ].map(function(pair){
+    return '<div><span class="label">'+pair[0]+'</span><span class="value">'+escapeHtml(pair[1])+'</span></div>';
+  }).join('');
+
+  var cardsHtml = '';
+  var allKeys = SCORE_METRICS.concat(['jumpMax','jumpAvg']);
+  allKeys.forEach(function(key){
+    var meta = METRICS.find(function(m){return m.key===key;});
+    var val = curVal(a,key);
+    var rankInfo = rankFor(key);
+    var avg = avgFor(key);
+    var hasVal = val!==null && val!==undefined && !isNaN(val);
+    var valueHtml = hasVal ? val.toFixed(meta.decimals)+' '+meta.unit : 'Not recorded';
+    var metaHtml = '';
+    if(hasVal){
+      var rank = rankInfo.ranks[a.id];
+      var diff = avg!==null ? round1(val-avg) : null;
+      var diffCls = diff===null ? 'zero' : (diff>0?'pos':(diff<0?'neg':'zero'));
+      var diffStr = diff===null ? '\u2014 vs team avg' : ((diff>0?'+':'')+diff.toFixed(1)+' vs team avg');
+      metaHtml = '<div class="m-delta '+diffCls+'">'+diffStr+'</div><div class="m-rank">Rank '+rank+' of '+rankInfo.total+'</div>';
+    } else {
+      metaHtml = '<div class="m-rank">Team avg: '+(avg!==null?avg.toFixed(1)+' '+meta.unit:'\u2014')+'</div>';
+    }
+    cardsHtml += '<div class="metric-card">'+
+      '<div class="m-label">'+meta.label+'</div>'+
+      '<div class="m-value'+(hasVal?'':' empty')+'">'+valueHtml+(hasVal?trendArrowHtml(a,key):'')+'</div>'+
+      metaHtml+
+      '</div>';
+  });
+
+  var score = computeScore(a);
+  var scoreRank = rankFor('score');
+  var scoreAvg = avgFor('score');
+  var scoreHasVal = score!==null;
+  var scoreDiff = scoreHasVal && scoreAvg!==null ? round1(score-scoreAvg) : null;
+  var scoreDiffCls = scoreDiff===null?'zero':(scoreDiff>0?'pos':(scoreDiff<0?'neg':'zero'));
+  var scoreMeta = scoreHasVal
+    ? '<div class="m-delta '+scoreDiffCls+'">'+(scoreDiff!==null?((scoreDiff>0?'+':'')+scoreDiff.toFixed(1)+' vs team avg'):'\u2014')+'</div><div class="m-rank">Rank '+scoreRank.ranks[a.id]+' of '+scoreRank.total+'</div>'
+    : '';
+  cardsHtml = '<div class="metric-card" style="grid-column:1/-1;background:var(--csu-green-dim);border-color:rgba(0,103,71,0.35);">'+
+    '<div class="m-label">Strength score (avg of lifts)</div>'+
+    '<div class="m-value'+(scoreHasVal?'':' empty')+'">'+(scoreHasVal?score.toFixed(1)+' lb':'Not enough data')+(scoreHasVal?trendArrowHtml(a,'score'):'')+'</div>'+
+    scoreMeta+
+    '</div>' + cardsHtml;
+
+  document.getElementById('modalMetrics').innerHTML = cardsHtml;
+  document.getElementById('modalRadar').innerHTML = buildRadarSVG(a);
+  document.getElementById('modalCompare').innerHTML = buildCompareSVG(a);
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeProfile(){
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+/* --- Tabs --- */
+Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn){
+  btn.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(b){b.classList.remove('active');});
+    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function(p){p.classList.remove('active');});
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.getAttribute('data-tab')).classList.add('active');
+    if(btn.getAttribute('data-tab')==='leaderboard') renderTrendChart();
+  });
+});
+
+document.getElementById('modalClose').addEventListener('click', closeProfile);
+document.getElementById('modalOverlay').addEventListener('click', function(e){
+  if(e.target===document.getElementById('modalOverlay')) closeProfile();
+});
+
+/* --- Leaderboard sorting & filters --- */
+Array.prototype.forEach.call(document.querySelectorAll('#leaderTable thead th.sortable'), function(th){
+  th.addEventListener('click', function(){
+    var key = th.getAttribute('data-key');
+    if(currentSort.key===key){
+      currentSort.dir = currentSort.dir==='asc'?'desc':'asc';
+    } else {
+      currentSort.key = key;
+      currentSort.dir = (key==='name'||key==='pos'||key==='cl') ? 'asc' : 'desc';
+    }
+    renderLeaderboard();
+  });
+});
+
+Array.prototype.forEach.call(document.querySelectorAll('#leaderFilterPills .filter-pill'), function(btn){
+  btn.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('#leaderFilterPills .filter-pill'), function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    leaderFilter = btn.getAttribute('data-filter');
+    renderLeaderboard();
+  });
+});
+
+/* --- Trend chart controls --- */
+function populateTrendMetricSelect(){
+  var sel = document.getElementById('trendMetric');
+  var options = [{key:'score', label:'Strength score'}].concat(METRICS.map(function(m){return {key:m.key,label:m.label};}));
+  sel.innerHTML = options.map(function(o){
+    return '<option value="'+o.key+'"'+(o.key===trendState.metric?' selected':'')+'>'+o.label+'</option>';
+  }).join('');
+}
+
+document.getElementById('trendMetric').addEventListener('change', function(){
+  trendState.metric = this.value;
+  renderTrendChart();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll('#trendViewToggle button'), function(btn){
+  btn.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('#trendViewToggle button'), function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    trendState.view = btn.getAttribute('data-view');
+    document.getElementById('trendAthletePicker').style.display = trendState.view==='individual' ? 'flex' : 'none';
+    renderTrendChart();
+  });
+});
+
+function populateAthletePicker(){
+  var wrap = document.getElementById('trendAthletePicker');
+  var sorted = athletes.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  wrap.innerHTML = sorted.map(function(a){
+    var sel = trendState.selected[a.id] ? ' selected' : '';
+    return '<span class="athlete-chip'+sel+'" data-id="'+a.id+'">'+escapeHtml(a.name)+'</span>';
+  }).join('');
+  Array.prototype.forEach.call(wrap.querySelectorAll('.athlete-chip'), function(chip){
+    chip.addEventListener('click', function(){
+      var id = chip.getAttribute('data-id');
+      if(trendState.selected[id]){ delete trendState.selected[id]; chip.classList.remove('selected'); }
+      else { trendState.selected[id] = true; chip.classList.add('selected'); }
+      renderTrendChart();
+    });
+  });
+}
+
+function metricSeriesForAthlete(a, key){
+  var hist = historyEntries(a);
+  var pts = [];
+  hist.forEach(function(h){
+    var v = key==='score' ? scoreAtEntry(h) : h[key];
+    if(v!==null && v!==undefined && !isNaN(v)) pts.push({date:h.date, value:v});
+  });
+  return pts;
+}
+
+function teamAverageSeries(key){
+  var dateMap = {};
+  athletes.forEach(function(a){
+    historyEntries(a).forEach(function(h){
+      var v = key==='score' ? scoreAtEntry(h) : h[key];
+      if(v!==null && v!==undefined && !isNaN(v)){
+        (dateMap[h.date] = dateMap[h.date]||[]).push(v);
+      }
+    });
+  });
+  var dates = Object.keys(dateMap).sort();
+  return dates.map(function(d){
+    var arr = dateMap[d];
+    return {date:d, value:round1(arr.reduce(function(s,v){return s+v;},0)/arr.length)};
+  });
+}
+
+function formatDateShort(iso){
+  var parts = iso.split('-');
+  var mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return mNames[parseInt(parts[1],10)-1]+' '+parseInt(parts[2],10);
+}
+
+function buildChartSVG(series, opts, width){
+  var allDates = {};
+  series.forEach(function(s){ s.points.forEach(function(p){ allDates[p.date]=true; }); });
+  var xDates = Object.keys(allDates).sort();
+  if(xDates.length===0) return null;
+
+  var allVals = [];
+  series.forEach(function(s){ s.points.forEach(function(p){ allVals.push(p.value); }); });
+  var minY = Math.min.apply(null, allVals);
+  var maxY = Math.max.apply(null, allVals);
+  if(minY===maxY){ minY -= 1; maxY += 1; }
+  var pad = (maxY-minY)*0.12;
+  minY -= pad; maxY += pad;
+
+  width = width || 760;
+  var height = Math.max(240, Math.round(width*0.34));
+  var manyDates = xDates.length > 6;
+  var marginLeft = 46, marginRight = 20, marginTop = 20, marginBottom = manyDates ? 58 : 42;
+  var plotW = width - marginLeft - marginRight;
+  var plotH = height - marginTop - marginBottom;
+
+  function xPos(i){ return xDates.length===1 ? marginLeft+plotW/2 : marginLeft + (i/(xDates.length-1))*plotW; }
+  function yPos(v){ return marginTop + (1-(v-minY)/(maxY-minY))*plotH; }
+
+  var svg = '<svg class="trend-svg" viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'" xmlns="http://www.w3.org/2000/svg" role="img">';
+
+  var ticks = 4;
+  for(var t=0;t<=ticks;t++){
+    var v = minY + (maxY-minY)*(t/ticks);
+    var y = yPos(v);
+    svg += '<line x1="'+marginLeft+'" y1="'+y+'" x2="'+(width-marginRight)+'" y2="'+y+'" stroke="#eceeed" stroke-width="1"/>';
+    svg += '<text x="'+(marginLeft-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="12" fill="#5c635f">'+v.toFixed(1)+'</text>';
+  }
+
+  xDates.forEach(function(d, i){
+    var x = xPos(i);
+    if(manyDates){
+      svg += '<text x="'+x+'" y="'+(height-marginBottom+18)+'" text-anchor="end" font-size="12" fill="#5c635f" transform="rotate(-40 '+x+' '+(height-marginBottom+18)+')">'+formatDateShort(d)+'</text>';
+    } else {
+      svg += '<text x="'+x+'" y="'+(height-marginBottom+20)+'" text-anchor="middle" font-size="12" fill="#5c635f">'+formatDateShort(d)+'</text>';
+    }
+  });
+
+  svg += '<line x1="'+marginLeft+'" y1="'+(height-marginBottom)+'" x2="'+(width-marginRight)+'" y2="'+(height-marginBottom)+'" stroke="#dde0df" stroke-width="1"/>';
+
+  series.forEach(function(s){
+    var pts = s.points.slice().sort(function(a,b){return a.date<b.date?-1:(a.date>b.date?1:0);});
+    var path = '';
+    pts.forEach(function(p){
+      var xi = xDates.indexOf(p.date);
+      var x = xPos(xi), y = yPos(p.value);
+      path += (path===''?'M':'L')+x+','+y+' ';
+    });
+    svg += '<path d="'+path+'" fill="none" stroke="'+s.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    pts.forEach(function(p){
+      var xi = xDates.indexOf(p.date);
+      var x = xPos(xi), y = yPos(p.value);
+      svg += '<circle cx="'+x+'" cy="'+y+'" r="3.5" fill="'+s.color+'"><title>'+escapeHtml(s.label)+': '+p.value.toFixed(1)+' '+(opts.unit||'')+' on '+formatDateShort(p.date)+'</title></circle>';
+    });
+  });
+
+  svg += '</svg>';
+  return svg;
+}
+
+function renderTrendChart(){
+  var container = document.getElementById('trendChart');
+  if(!container) return;
+  var key = trendState.metric;
+  var meta = metricMeta(key);
+  var series = [];
+
+  if(trendState.view==='team'){
+    var pts = teamAverageSeries(key);
+    if(pts.length>=1) series = [{label:'Team average', color:'#006747', points:pts}];
+  } else {
+    var ids = Object.keys(trendState.selected);
+    ids.forEach(function(id, idx){
+      var a = athletes.find(function(x){return x.id===id;});
+      if(!a) return;
+      var p2 = metricSeriesForAthlete(a, key);
+      if(p2.length>0) series.push({label:a.name, color:COLOR_CYCLE[idx % COLOR_CYCLE.length], points:p2});
+    });
+  }
+
+  var totalPoints = series.reduce(function(s,ser){return s+ser.points.length;},0);
+
+  if(trendState.view==='individual' && Object.keys(trendState.selected).length===0){
+    container.innerHTML = '<div class="chart-empty">Select one or more athletes above to see their trend for '+meta.label.toLowerCase()+'.</div>';
+    return;
+  }
+  if(totalPoints===0){
+    container.innerHTML = '<div class="chart-empty">No test dates logged yet for '+meta.label.toLowerCase()+'.</div>';
+    return;
+  }
+
+  var svg = buildChartSVG(series, {unit:meta.unit}, container.clientWidth || 760);
+  if(!svg){
+    container.innerHTML = '<div class="chart-empty">Not enough test dates yet to plot a trend for '+meta.label.toLowerCase()+'.</div>';
+    return;
+  }
+
+  var legend = '<div class="chart-legend">'+series.map(function(s){
+    return '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:'+s.color+'"></span>'+escapeHtml(s.label)+'</span>';
+  }).join('')+'</div>';
+
+  container.innerHTML = svg + legend;
+}
+
+function renderAll(){
+  renderSnapshot();
+  renderOverview();
+  renderBarList();
+  renderLeaderboard();
+  renderTrendChart();
+}
+
+function setHeaderMeta(){
+  var withData = athletes.filter(function(a){return computeScore(a)!==null;}).length;
+  document.getElementById('headerMeta').textContent = athletes.length + ' athletes on roster \u00b7 ' + withData + ' with lift data on file';
+}
+
+loadData();
+populateBarMetricPills();
+populateTrendMetricSelect();
+populateAthletePicker();
+renderAll();
+setHeaderMeta();
+
+var resizeTimer = null;
+window.addEventListener('resize', function(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function(){
+    renderBarList();
+    renderTrendChart();
+  }, 200);
+});
+
+})();
+</script>
+</body>
+</html>
