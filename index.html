@@ -152,6 +152,15 @@
   .chart-legend-dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
 
   .trend-arrow{font-size:9px;margin-left:5px;vertical-align:2px;}
+  .cond-dots{display:inline-flex;gap:4px;align-items:center;}
+  .cond-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;}
+  .cond-dot.pass{background:var(--success);}
+  .cond-dot.fail{background:var(--white);border:2px solid var(--danger);box-sizing:border-box;}
+  .cond-dot.empty{background:var(--surface-3);}
+  .cond-status{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;}
+  .cond-status.green{background:var(--tier-green-bg,#d7ecdf);color:var(--success);}
+  .cond-status.yellow{background:#fdf1cd;color:var(--warning);}
+  .cond-status.red{background:#fadada;color:var(--danger);}
   .trend-up{color:var(--success);}
   .trend-down{color:var(--danger);}
   .trend-flat{color:var(--text-muted);}
@@ -227,6 +236,89 @@
   .empty-note{background:var(--csu-green-dim);border:1px solid rgba(0,194,120,0.35);color:var(--csu-green);
     padding:10px 14px;border-radius:var(--radius-sm);font-size:12.5px;margin-bottom:16px;}
 
+  .std-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:0.2px;}
+  .std-badge.std-below{background:rgba(163,49,43,0.12);color:var(--danger);}
+  .std-badge.std-developing{background:rgba(138,106,8,0.12);color:var(--warning);}
+  .std-badge.std-goal{background:rgba(28,107,60,0.12);color:var(--success);}
+  .std-badge.std-exceptional{background:rgba(8,145,178,0.12);color:#0891b2;}
+  .info-icon{position:relative;display:inline-block;margin-left:5px;color:var(--text-muted);cursor:help;font-size:12px;vertical-align:1px;}
+  .info-icon:hover, .info-icon:focus{color:var(--csu-green);}
+  .info-tooltip{
+    display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    width:260px;background:var(--csu-green-deep);color:#fff;font-size:11.5px;font-weight:400;
+    line-height:1.5;padding:10px 12px;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    z-index:60;text-transform:none;letter-spacing:normal;
+  }
+  .info-tooltip em{display:block;margin-top:6px;color:#c9e3d6;font-style:italic;}
+  .info-icon:hover .info-tooltip, .info-icon:focus .info-tooltip{display:block;}
+  .m-std-row{margin-top:8px;}
+
+  .flags-intro{background:var(--csu-green-dim);border:1px solid rgba(0,103,71,0.35);color:var(--csu-green-deep);
+    padding:11px 15px;border-radius:var(--radius-sm);font-size:12.5px;margin-bottom:18px;line-height:1.5;}
+  .flags-intro-link{color:var(--csu-green-deep);font-weight:700;text-decoration:underline;}
+  .flags-col-head{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-secondary);margin:22px 0 10px;}
+  .flags-col-head:first-of-type{margin-top:8px;}
+  .flags-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:16px;margin-bottom:6px;}
+  .std-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;}
+  .std-section-head{display:flex;align-items:center;margin-bottom:10px;}
+  .std-section-head h3{margin:0;font-size:14px;color:var(--text-primary);display:flex;align-items:center;}
+  .tier-bar{display:flex;width:100%;height:20px;border-radius:6px;overflow:hidden;margin-bottom:8px;}
+  .tier-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;min-width:0;transition:width 0.2s;}
+  .tier-seg-below{background:var(--danger);}
+  .tier-seg-developing{background:var(--warning);}
+  .tier-seg-goal{background:var(--success);}
+  .tier-seg-exceptional{background:#0891b2;}
+  .tier-legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
+  .tier-legend-item{font-size:10.8px;color:var(--text-secondary);display:flex;align-items:center;gap:5px;}
+  .tier-legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .tier-legend-dot.dot-below{background:var(--danger);}
+  .tier-legend-dot.dot-developing{background:var(--warning);}
+  .tier-legend-dot.dot-goal{background:var(--success);}
+  .tier-legend-dot.dot-exceptional{background:#0891b2;}
+  .std-summary-line{font-size:11.5px;color:var(--text-secondary);margin-bottom:8px;}
+  .tier-toggle{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+  .tier-toggle-btn{background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text-secondary);
+    padding:5px 11px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .tier-toggle-btn:hover:not(.active){border-color:var(--csu-green);color:var(--csu-green);}
+  .tier-toggle-btn.active{background:var(--csu-green);border-color:var(--csu-green);color:var(--white);}
+  .method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:6px;}
+  .method-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px 17px;}
+  .method-card h3{margin:0 0 7px;font-size:13.5px;color:var(--text-primary);}
+  .method-values{font-size:11.5px;font-weight:600;color:var(--csu-green-deep);background:var(--csu-green-dim);display:inline-block;padding:4px 9px;border-radius:6px;margin-bottom:6px;}
+  .method-short-source{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
+  .method-details summary{font-size:11px;font-weight:700;color:var(--csu-green);cursor:pointer;list-style:none;user-select:none;}
+  .method-details summary::-webkit-details-marker{display:none;}
+  .method-details summary::before{content:'+ ';}
+  .method-details[open] summary::before{content:'\2212 ';}
+  .method-details[open] summary{margin-bottom:8px;}
+  .method-source{font-size:12px;line-height:1.55;color:var(--text-secondary);margin:0 0 8px;}
+  .method-note{font-size:11.5px;line-height:1.5;color:var(--text-muted);font-style:italic;background:var(--surface-2);border-left:2px solid var(--border-strong);padding:6px 10px;margin-bottom:8px;}
+  .method-link{font-size:11.5px;font-weight:700;color:var(--csu-green);text-decoration:none;}
+  .method-link:hover{text-decoration:underline;}
+  .flag-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+  .flag-row:last-child{border-bottom:none;}
+  .flag-row:hover{background:var(--surface-2);}
+  .flag-rank{width:18px;text-align:center;font-weight:700;color:var(--text-muted);font-size:11.5px;flex-shrink:0;}
+  .flag-name{flex:1;min-width:80px;font-weight:700;font-size:12.8px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .flag-name .pos-tag{margin-left:6px;color:var(--text-secondary);font-weight:600;}
+  .flag-value{font-weight:800;font-size:12.8px;white-space:nowrap;flex-shrink:0;}
+  .flag-value-below{color:var(--danger);}
+  .flag-value-developing{color:var(--warning);}
+  .flag-value-goal{color:var(--success);}
+  .flag-value-exceptional{color:#0891b2;}
+  .flag-context{font-size:10.8px;color:var(--text-secondary);white-space:nowrap;flex-shrink:0;min-width:60px;text-align:right;}
+  .flag-empty{color:var(--text-secondary);font-size:12.5px;padding:10px 0;line-height:1.5;}
+
+  .self-compare-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12.5px;border-top:1px solid var(--border);flex-wrap:wrap;}
+  .self-compare-row:first-child{border-top:none;}
+  .sc-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;padding:3px 8px;border-radius:5px;white-space:nowrap;}
+  .self-compare-strength .sc-tag{background:rgba(28,107,60,0.12);color:var(--success);}
+  .self-compare-weak .sc-tag{background:rgba(163,49,43,0.12);color:var(--danger);}
+  .sc-metric{font-weight:700;color:var(--text-primary);}
+  .sc-diff{margin-left:auto;font-weight:700;font-size:12px;}
+  .sc-diff.pos{color:var(--success);}
+  .sc-diff.neg{color:var(--danger);}
+
   footer.app-footer{text-align:center;padding:20px;font-size:11.5px;color:var(--text-muted);}
   @media (max-width:640px){
     .info-grid{grid-template-columns:1fr;}
@@ -251,6 +343,10 @@
 <nav class="tabs">
   <button class="tab-btn active" data-tab="overview">Team overview</button>
   <button class="tab-btn" data-tab="leaderboard">Leaderboard &amp; trends</button>
+  <button class="tab-btn" data-tab="jump">Approach jump</button>
+  <button class="tab-btn" data-tab="conditioning">23 test</button>
+  <button class="tab-btn" data-tab="flags">Flags</button>
+  <button class="tab-btn" data-tab="methodology">Methodology</button>
 </nav>
 
 <main>
@@ -361,6 +457,103 @@
     </div>
   </section>
 
+  <section class="panel" id="panel-jump">
+    <div class="empty-note">Max is captured on test day with coaches using a Vertec. Jump avg is tested via OVR and doubles as the readiness signal: baseline is the average of every preseason test tagged as baseline (not just the first one). Status is On track at 95%+ of baseline, Monitor at 90&ndash;95%, Below baseline under 90% &mdash; matching the team spreadsheet exactly. Note that max and avg come from two different measurement tools, so they're not directly comparable to each other &mdash; see the Methodology tab for the full reasoning.</div>
+    <div class="snapshot-grid" id="jumpSnapshotGrid"></div>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 style="font-size:16px;">Season trend</h2>
+        <p>Team average by default, or pick individual athletes to compare.</p>
+      </div>
+    </div>
+    <div class="trend-controls">
+      <div class="field-inline">
+        <label for="jumpMetricSelect">Metric</label>
+        <select id="jumpMetricSelect">
+          <option value="jumpAvg">Approach jump (avg)</option>
+          <option value="jumpMax">Approach jump (max)</option>
+        </select>
+      </div>
+      <div class="segmented" id="jumpViewToggle">
+        <button data-view="team" class="active">Team average</button>
+        <button data-view="individual">Individual athletes</button>
+      </div>
+    </div>
+    <div class="athlete-picker" id="jumpAthletePicker" style="display:none;"></div>
+    <div class="chart-card" style="margin-bottom:26px;">
+      <div id="jumpChart"></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 style="font-size:16px;">Athlete detail</h2>
+        <p>Current numbers compared to each athlete's own preseason baseline.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="jumpTable">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Pos.</th>
+            <th>Jump avg</th>
+            <th>Jump max</th>
+            <th>Baseline avg</th>
+            <th>Baseline samples</th>
+            <th>Vs. baseline</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="jumpTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-conditioning">
+    <div class="empty-note">The 23 test: 5-10-15-10-5 yard pyramid shuttle (90 yards/rep), under 23 seconds per rep, 23-second rest, 6 reps total. Currently tracked pass/fail per rep — once rep times are available, this can be upgraded to fade % and buffer tracking.</div>
+    <div class="snapshot-grid" id="condSnapshotGrid"></div>
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 style="font-size:16px;">Most recent test</h2>
+        <p>Each dot is one rep — filled green means under 23 seconds, hollow red means over. Hover the date for test history.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="condTable">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Pos.</th>
+            <th>Reps</th>
+            <th>Passed</th>
+            <th>First rep failed</th>
+            <th>Vs. last test</th>
+          </tr>
+        </thead>
+        <tbody id="condTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-flags">
+    <div class="flags-intro">Every category below is judged against a real standard, not just team rank — hover the <span class="info-icon" style="margin-left:0;">&#9432;</span> next to any metric to see exactly where its numbers come from. Full detail lives in the <a href="#" data-goto-tab="methodology" class="flags-intro-link">Methodology</a> tab. Click any athlete to open their profile. <b>No body weight or body composition data is used anywhere on this dashboard</b> — approach jump and power clean stand in as the power profile in its place.</div>
+
+    <div class="flags-col-head">Readiness</div>
+    <div class="flags-grid" id="flagReadiness"></div>
+
+    <div class="flags-col-head">Strength</div>
+    <div class="flags-grid" id="flagStrength"></div>
+
+    <div class="flags-col-head">Power &amp; conditioning</div>
+    <div class="flags-grid" id="flagPowerCond"></div>
+  </section>
+
+  <section class="panel" id="panel-methodology">
+    <div class="flags-intro">The numbers behind every standard, at a glance. Tap "Full sourcing" on any card for the citation and detail.</div>
+    <div id="methodologyBody"></div>
+  </section>
 
 </main>
 
@@ -401,15 +594,198 @@
 (function(){
 
 var METRICS = [
-  {key:'backSquat', label:'Back squat', short:'Squat', unit:'lb', decimals:1, group:'strength'},
-  {key:'benchPress', label:'Bench press', short:'Bench', unit:'lb', decimals:1, group:'strength'},
-  {key:'deadlift', label:'Deadlift', short:'Deadlift', unit:'lb', decimals:1, group:'strength'},
-  {key:'powerClean', label:'Power clean', short:'Clean', unit:'lb', decimals:1, group:'strength'},
-  {key:'jumpMax', label:'Approach jump (max)', short:'Jump max', unit:'in', decimals:1, group:'jump'},
-  {key:'jumpAvg', label:'Approach jump (avg)', short:'Jump avg', unit:'in', decimals:1, group:'jump'}
+  {key:'backSquat', label:'Back squat', short:'Squat', unit:'lb', decimals:1, group:'strength', better:'high'},
+  {key:'benchPress', label:'Bench press', short:'Bench', unit:'lb', decimals:1, group:'strength', better:'high'},
+  {key:'deadlift', label:'Deadlift', short:'Deadlift', unit:'lb', decimals:1, group:'strength', better:'high'},
+  {key:'powerClean', label:'Power clean', short:'Clean', unit:'lb', decimals:1, group:'strength', better:'high'},
+  {key:'jumpMax', label:'Approach jump (max)', short:'Jump max', unit:'in', decimals:1, group:'jump', better:'high'},
+  {key:'jumpAvg', label:'Approach jump (avg)', short:'Jump avg', unit:'in', decimals:1, group:'jump', better:'high'}
 ];
 var SCORE_METRICS = ['backSquat','benchPress','deadlift','powerClean'];
+var RADAR_KEYS = ['backSquat','benchPress','deadlift','powerClean','jumpMax','jumpAvg'];
 var COLOR_CYCLE = ['#006747','#1f6feb','#c2410c','#7c3aed','#be185d','#0891b2','#a16207','#4b5563'];
+
+/* ================= STANDARDS ENGINE ================= */
+/* Every real standard used on this dashboard, with its actual source.
+   kind: selfProgress (bands = % change vs. the athlete's own active baseline test \u2014
+         no body weight or body composition data used anywhere in this engine),
+         ratioTier (min/goal/exceptional as a multiple of another lift, not bodyweight),
+         percentileBottom (team-relative, no external standard available) */
+var STANDARDS = {
+  backSquat: {
+    kind:'selfProgress', bands:[0,4,10],
+    tierLabels:{below:'Regressed', developing:'Maintained', goal:'Improved', exceptional:'Exceptional'},
+    label:'Back squat',
+    source:'van den Hoek et al., "Long-Term Adaptations in the Squat, Bench Press and Deadlift," Journal of Science and Medicine in Sport, 2024 \u2014 retrospective analysis of ~1,896 competitive powerlifters (~625 female). Early-career trained lifters gain roughly 7.5\u201312.5% per year, tapering to under 1% annually by year ten.',
+    sourceUrl:'https://pubmed.ncbi.nlm.nih.gov/35019902/',
+    note:'Annual gain-rate research scaled down to a single Spring\u2192Fall testing block, not lifted directly from the paper. Uses no body weight or body composition data \u2014 compares each athlete only to her own prior tested max.'
+  },
+  benchPress: {
+    kind:'selfProgress', bands:[0,4,10],
+    tierLabels:{below:'Regressed', developing:'Maintained', goal:'Improved', exceptional:'Exceptional'},
+    label:'Bench press',
+    source:'van den Hoek et al., 2024, Journal of Science and Medicine in Sport \u2014 same dataset as back squat; bench press showed smaller absolute annual gains than squat/deadlift but no significant sex difference in percentage change.',
+    sourceUrl:'https://pubmed.ncbi.nlm.nih.gov/35019902/',
+    note:'Annual gain-rate research scaled down to a single testing block. Uses no body weight or body composition data.'
+  },
+  deadlift: {
+    kind:'selfProgress', bands:[0,4,10],
+    tierLabels:{below:'Regressed', developing:'Maintained', goal:'Improved', exceptional:'Exceptional'},
+    label:'Deadlift',
+    source:'van den Hoek et al., 2024, Journal of Science and Medicine in Sport \u2014 same dataset as back squat; deadlift and squat showed the largest annual gains of the three lifts.',
+    sourceUrl:'https://pubmed.ncbi.nlm.nih.gov/35019902/',
+    note:'Annual gain-rate research scaled down to a single testing block. Uses no body weight or body composition data.'
+  },
+};
+
+var TEAM_RELATIVE_STANDARDS = {
+  jumpAvg: {
+    pct:20,
+    label:'Approach jump (avg)',
+    source:'Team-relative only \u2014 bottom 20% of the roster. No verified external standard was found for volleyball approach jump height, so this flags relative to teammates rather than an absolute bar. Uses no body weight data.',
+    sourceUrl:null
+  },
+  powerClean: {
+    pct:20,
+    label:'Power clean',
+    source:'Team-relative only \u2014 bottom 20% of the roster on raw power clean weight, not a ratio. A clean:squat ratio was tried first, but a ratio divides by squat \u2014 an athlete with an exceptional squat and a perfectly normal clean gets a manufactured-low ratio and looks like she has a problem she doesn\u2019t have. Flagging the raw number sidesteps that: it only flags an athlete whose actual clean is weak, not one whose squat happens to be unusually strong.',
+    sourceUrl:null
+  }
+};
+
+/* Complement to the ratio snapshot above: is an athlete's own clean staying in step
+   with their own squat over time, regardless of where the team sits? A rising squat
+   paired with a flat or falling ratio is the real technical/RFD flag. */
+function cleanSquatRatioSequence(a){
+  var hist = historyEntries(a);
+  var seq = [];
+  hist.forEach(function(h){
+    if(h.backSquat!==null && h.backSquat!==undefined && h.backSquat>0 &&
+       h.powerClean!==null && h.powerClean!==undefined){
+      seq.push({date:h.date, value:round2(h.powerClean/h.backSquat)});
+    }
+  });
+  return seq;
+}
+
+function curCleanSquatRatio(a){
+  var seq = cleanSquatRatioSequence(a);
+  return seq.length ? seq[seq.length-1].value : null;
+}
+
+function cleanSquatRatioTrendHtml(a){
+  var seq = cleanSquatRatioSequence(a);
+  if(seq.length<2) return '';
+  var diff = round2(seq[seq.length-1].value - seq[seq.length-2].value);
+  if(diff>0) return '<span class="trend-arrow trend-up" title="Ratio up '+diff.toFixed(2)+' since last time both lifts were tested">&#9650;</span>';
+  if(diff<0) return '<span class="trend-arrow trend-down" title="Ratio down '+Math.abs(diff).toFixed(2)+' since last time both lifts were tested \u2014 squat and clean are diverging">&#9660;</span>';
+  return '<span class="trend-arrow trend-flat" title="No change in ratio since last time both lifts were tested">&#8211;</span>';
+}
+
+
+var CONDITIONING_STANDARD = {
+  passLine:4,
+  label:'23 test',
+  source:'Program standard set directly by the Cleveland State strength & conditioning staff (below 4 of 6 reps passed flags for review), not an external or published figure \u2014 same approach used for lacrosse\u2019s Bronco test threshold.',
+  sourceUrl:null
+};
+
+function baselineEntries(a){
+  return historyEntries(a).filter(function(h){ return h.isBaseline===true; });
+}
+
+/* Most recent baseline-tagged entry on or before refDate \u2014 lets a new training
+   cycle (e.g. January off-season) become the new reference point going forward. */
+function activeBaselineEntry(a, refDate){
+  var baselines = baselineEntries(a);
+  var candidates = baselines.filter(function(b){ return b.date <= refDate; });
+  if(candidates.length===0) return null;
+  return candidates[candidates.length-1];
+}
+
+/* {baselineDate, baselineLabel, baselineValue, currentValue, currentDate, pctChange} or null */
+function baselineCompareForMetric(a, key){
+  var seq = valueSequence(a, key);
+  if(seq.length===0) return null;
+  var current = seq[seq.length-1];
+  var baseEntry = activeBaselineEntry(a, current.date);
+  if(!baseEntry) return null;
+  var baseVal = baseEntry[key];
+  if(baseVal===null || baseVal===undefined) return null;
+  if(baseEntry.date===current.date) return null;
+  var pctChange = baseVal>0 ? round1(((current.value-baseVal)/baseVal)*100) : null;
+  return {baselineDate:baseEntry.date, baselineLabel:baseEntry.label, baselineValue:baseVal, currentValue:current.value, currentDate:current.date, pctChange:pctChange};
+}
+
+function ratioForStandard(a, key){
+  var std = STANDARDS[key];
+  if(!std || std.kind!=='ratioTier') return null;
+  var num = curVal(a, key);
+  var denom = curVal(a, std.relTo);
+  if(num===null || denom===null || !denom) return null;
+  return num/denom;
+}
+
+function round2(n){ return Math.round(n*100)/100; }
+
+var TIER_ORDER = ['below','developing','goal','exceptional'];
+
+/* Unified tier lookup across both standard kinds.
+   Returns {tier, sortValue, displayValue, raw} or null if no data yet. */
+function tierInfoFor(a, key){
+  var std = STANDARDS[key];
+  if(!std) return null;
+  if(std.kind==='selfProgress'){
+    var cmp = baselineCompareForMetric(a, key);
+    if(!cmp || cmp.pctChange===null) return null;
+    var bands = std.bands;
+    var idx = 0;
+    for(var i=0;i<bands.length;i++){ if(cmp.pctChange>=bands[i]) idx=i+1; }
+    var tiers = ['below','developing','goal','exceptional'];
+    return {tier:tiers[idx], sortValue:cmp.pctChange, displayValue:(cmp.pctChange>0?'+':'')+cmp.pctChange.toFixed(1)+'%', raw:cmp};
+  }
+  var ratio = ratioForStandard(a, key);
+  if(ratio===null) return null;
+  var tier;
+  if(ratio < std.min){ tier='below'; }
+  else if(std.exceptional!==null && std.exceptional!==undefined && ratio >= std.exceptional){ tier='exceptional'; }
+  else if(ratio >= std.goal){ tier='goal'; }
+  else { tier='developing'; }
+  return {tier:tier, sortValue:ratio, displayValue:round2(ratio)+'\u00d7', raw:{ratio:round2(ratio)}};
+}
+
+function stdBadgeHtml(tier, label){
+  return '<span class="std-badge std-'+tier+'">'+escapeHtml(label)+'</span>';
+}
+
+function infoIconValuesText(key){
+  var std = STANDARDS[key];
+  if(!std) return '';
+  if(std.kind==='selfProgress'){
+    return std.label+' \u2014 Regressed <0%, Maintained 0\u2013'+std.bands[1]+'%, Improved '+std.bands[1]+'\u2013'+std.bands[2]+'%, Exceptional '+std.bands[2]+'%+, all vs. the athlete\u2019s own active baseline test.';
+  }
+  return std.label+' \u2014 Min '+std.min+'\u00d7'+(std.exceptional?', Goal '+std.goal+'\u00d7, Exceptional '+std.exceptional+'\u00d7':', Goal '+std.goal+'\u00d7')+' '+std.relLabel+'.';
+}
+
+function infoIconHtml(key){
+  var std = STANDARDS[key];
+  if(!std) return '';
+  var text = infoIconValuesText(key);
+  return '<span class="info-icon" tabindex="0" data-info-key="'+key+'">&#9432;<span class="info-tooltip">'+escapeHtml(text)+' <em>Full sourcing in the Methodology tab.</em></span></span>';
+}
+
+/* Badge to embed in a profile metric card, or '' if this metric has no standard yet */
+function tierBadgeForCard(key, a){
+  var std = STANDARDS[key];
+  if(!std) return '';
+  var info = tierInfoFor(a, key);
+  if(!info) return '';
+  var label = std.tierLabels[info.tier];
+  var suffix = std.kind==='selfProgress'
+    ? (' since '+(info.raw.baselineLabel || formatDateShort(info.raw.baselineDate)))
+    : (' '+std.relLabel);
+  return stdBadgeHtml(info.tier, label+' \u00b7 '+info.displayValue+suffix);
+}
 
 var RAW_SEED = [
   {id:'a16', no:16, name:'Abigail Bartolo', pos:'DS', cl:'Fr.', hometown:'Perrysburg, Ohio / Perrysburg', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
@@ -438,11 +814,11 @@ function buildSeedData(){
   return RAW_SEED.map(function(r){
     var hasAny = SCORE_METRICS.concat(['jumpMax','jumpAvg']).some(function(k){ return r[k]!==null && r[k]!==undefined; });
     var history = hasAny ? [{
-      date:SEED_DATE, label:'Spring 2026',
+      date:SEED_DATE, label:'Spring 2026', isBaseline:true,
       backSquat:r.backSquat, benchPress:r.benchPress, deadlift:r.deadlift, powerClean:r.powerClean,
       jumpMax:r.jumpMax, jumpAvg:r.jumpAvg
     }] : [];
-    return {id:r.id, no:r.no, name:r.name, pos:r.pos, cl:r.cl, hometown:r.hometown, prevSchool:r.prevSchool, history:history};
+    return {id:r.id, no:r.no, name:r.name, pos:r.pos, cl:r.cl, hometown:r.hometown, prevSchool:r.prevSchool, history:history, conditioning:(r.conditioning||[])};
   });
 }
 
@@ -553,6 +929,111 @@ function trendArrowHtml(a, key){
   return '<span class="trend-arrow trend-flat" title="No change since last test">&#8211;</span>';
 }
 
+function conditioningEntries(a){
+  return (a.conditioning||[]).slice().sort(function(x,y){
+    return x.date<y.date ? -1 : (x.date>y.date ? 1 : 0);
+  });
+}
+
+function latestConditioning(a){
+  var entries = conditioningEntries(a);
+  return entries.length ? entries[entries.length-1] : null;
+}
+
+function repsPassed(entry){
+  if(!entry || !entry.reps) return null;
+  return entry.reps.filter(function(r){ return r===true; }).length;
+}
+
+function firstFailRep(entry){
+  if(!entry || !entry.reps) return null;
+  var idx = entry.reps.findIndex(function(r){ return r===false; });
+  return idx===-1 ? null : idx+1;
+}
+
+function conditioningTier(passed){
+  if(passed===null || passed===undefined) return null;
+  if(passed>=6) return 'green';
+  if(passed>=4) return 'yellow';
+  return 'red';
+}
+
+function conditioningDotsHtml(entry){
+  if(!entry || !entry.reps) return '<span class="cond-dots">' + [1,2,3,4,5,6].map(function(){return '<span class="cond-dot empty"></span>';}).join('') + '</span>';
+  return '<span class="cond-dots">' + entry.reps.map(function(r){
+    return '<span class="cond-dot '+(r?'pass':'fail')+'" title="'+(r?'Passed':'Failed')+'"></span>';
+  }).join('') + '</span>';
+}
+
+function conditioningTrendHtml(a){
+  var entries = conditioningEntries(a);
+  if(entries.length<2) return '';
+  var cur = repsPassed(entries[entries.length-1]);
+  var prev = repsPassed(entries[entries.length-2]);
+  var diff = cur-prev;
+  if(diff>0) return '<span class="trend-arrow trend-up" title="'+diff+' more rep(s) passed than last test">&#9650;</span>';
+  if(diff<0) return '<span class="trend-arrow trend-down" title="'+Math.abs(diff)+' fewer rep(s) passed than last test">&#9660;</span>';
+  return '<span class="trend-arrow trend-flat" title="Same as last test">&#8211;</span>';
+}
+
+/* --- Approach jump readiness helpers ---
+   Baseline = average of every history entry tagged isBaseline:true within the
+   most recent baseline block for this metric (research-backed: an averaged
+   baseline is more sensitive to fatigue than a single best/first reading).
+   Flag threshold uses each athlete's own baseline test-retest variation
+   (coefficient of variation) once 3+ baseline samples exist, floored at a
+   flat 10% drop so a naturally noisy tester doesn't get an unrealistic pass. */
+var JUMP_READINESS_STANDARD = {
+  label:'Approach jump readiness',
+  onTrackRatio:0.95,
+  monitorRatio:0.90,
+  tierLabels:{below:'Below baseline', developing:'Monitor', goal:'On track'},
+  source:'Countermovement jump (CMJ) is the most-studied tool for monitoring neuromuscular fatigue in team-sport athletes, and a meta-analysis of that literature (Claudino et al., "The countermovement jump to monitor neuromuscular status," Journal of Science and Medicine in Sport, 2017 \u2014 151 studies) found average jump height more sensitive to fatigue and supercompensation than a single peak reading, which is why this dashboard averages every baseline test rather than using a single best jump. This program tracks readiness through the approach jump specifically rather than a standing CMJ, so the number carries some technical/timing variance on top of pure neuromuscular fatigue \u2014 a real tradeoff against a cleaner CMJ signal, made deliberately for practicality. The flag thresholds (On track \u226595%, Monitor 90\u201395%, Below baseline <90%) are a program standard set directly by the Cleveland State strength & conditioning staff to match the team\u2019s own tracking spreadsheet, not an external citation \u2014 same approach used for the 23 test\u2019s pass line.',
+  note:'Max and avg are measured with two different tools: max is captured by coaches with a Vertec, avg (the readiness metric) is captured via OVR. They\u2019re not directly comparable to each other as a result \u2014 an electronic system and a manually-administered device carry different measurement precision, which is part of why readiness is tracked through avg\u2019s repeated OVR testing rather than the periodic Vertec max.',
+  sourceUrl:'https://pubmed.ncbi.nlm.nih.gov/27567573/'
+};
+
+/* Most recent contiguous run of isBaseline:true entries for this metric \u2014
+   lets a later baseline reset (e.g. a new training cycle) replace the old one. */
+function jumpBaselineBlock(a, key){
+  var hist = historyEntries(a).filter(function(h){ return h[key]!==null && h[key]!==undefined; });
+  var blocks = [];
+  var current = null;
+  hist.forEach(function(h){
+    if(h.isBaseline){
+      if(!current){ current = []; blocks.push(current); }
+      current.push(h);
+    } else {
+      current = null;
+    }
+  });
+  return blocks.length ? blocks[blocks.length-1] : null;
+}
+
+/* {mean, n, dates} or null if no baseline samples yet */
+function jumpBaselineStats(a, key){
+  var block = jumpBaselineBlock(a, key);
+  if(!block || block.length===0) return null;
+  var values = block.map(function(h){ return h[key]; });
+  var n = values.length;
+  var mean = values.reduce(function(s,v){return s+v;},0)/n;
+  var dates = block.map(function(h){ return h.date; });
+  return {mean:round1(mean), n:n, dates:dates};
+}
+
+/* {current, baselineMean, ratio, pctChange, tier, n} or null if not enough data.
+   tier/ratio match the team spreadsheet exactly: ratio = current \u00f7 baseline avg,
+   \u226595% On track ("goal"), 90\u201395% Monitor ("developing"), <90% Below baseline ("below"). */
+function jumpReadinessInfo(a, key){
+  var stats = jumpBaselineStats(a, key);
+  var current = curVal(a, key);
+  if(!stats || current===null || current===undefined || !(stats.mean>0)) return null;
+  var ratio = Math.round((current/stats.mean)*1000)/1000;
+  var pctChange = round1((ratio-1)*100);
+  var tier = ratio>=JUMP_READINESS_STANDARD.onTrackRatio ? 'goal' : (ratio>=JUMP_READINESS_STANDARD.monitorRatio ? 'developing' : 'below');
+  return {current:current, baselineMean:stats.mean, ratio:ratio, pctChange:pctChange, tier:tier, n:stats.n};
+}
+
 function cellHtml(val, tier, decimals, extraClass, trendHtml){
   var tdClass = extraClass || '';
   if(val===null||val===undefined||isNaN(val)){
@@ -584,7 +1065,7 @@ function metricMeta(key){
 /* --- Team snapshot cards --- */
 function renderSnapshot(){
   var wrap = document.getElementById('snapshotGrid');
-  var keys = METRICS.map(function(m){return m.key;}).concat(['score']);
+  var keys = METRICS.filter(function(m){return m.better!=='neutral';}).map(function(m){return m.key;}).concat(['score']);
   wrap.innerHTML = keys.map(function(key){
     var meta = metricMeta(key);
     var avg = avgFor(key);
@@ -635,7 +1116,7 @@ function renderOverview(){
 /* --- Bar-chart leaderboard --- */
 function populateBarMetricPills(){
   var wrap = document.getElementById('barMetricPills');
-  var options = [{key:'score', label:'Strength score'}].concat(METRICS.map(function(m){return {key:m.key,label:m.label};}));
+  var options = [{key:'score', label:'Strength score'}].concat(METRICS.filter(function(m){return m.better!=='neutral';}).map(function(m){return {key:m.key,label:m.label};}));
   wrap.innerHTML = options.map(function(o){
     return '<button class="filter-pill'+(o.key===barMetric?' active':'')+'" data-metric="'+o.key+'">'+o.label+'</button>';
   }).join('');
@@ -777,16 +1258,17 @@ function renderLeaderboard(){
 
 /* --- Radar chart (percentile) --- */
 function buildRadarSVG(a){
-  var axes = METRICS;
+  var axes = RADAR_KEYS.map(metricMeta);
   var n = axes.length;
-  var size = 280, center = size/2, radius = 96;
+  var width = 320, height = 280, center = width/2, centerY = height/2, radius = 88;
   var angleStep = (2*Math.PI)/n;
+  var anyUntested = false;
   function pt(i, pct){
     var angle = -Math.PI/2 + i*angleStep;
     var r = radius*(pct/100);
-    return [center + r*Math.cos(angle), center + r*Math.sin(angle)];
+    return [center + r*Math.cos(angle), centerY + r*Math.sin(angle)];
   }
-  var svg = '<svg viewBox="0 0 '+size+' '+size+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">';
+  var svg = '<svg viewBox="0 0 '+width+' '+height+'" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">';
 
   [25,50,75,100].forEach(function(ring){
     var poly = axes.map(function(m,i){ return pt(i, ring).join(','); }).join(' ');
@@ -794,10 +1276,11 @@ function buildRadarSVG(a){
   });  axes.forEach(function(m,i){
     var p = pt(i,100);
     var hasVal = curVal(a,m.key)!==null;
-    svg += '<line x1="'+center+'" y1="'+center+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#dde0df" stroke-width="1"'+(hasVal?'':' stroke-dasharray="3 3"')+'/>';
-    var lp = pt(i,118);
+    if(!hasVal) anyUntested = true;
+    svg += '<line x1="'+center+'" y1="'+centerY+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="#dde0df" stroke-width="1"'+(hasVal?'':' stroke-dasharray="3 3"')+'/>';
+    var lp = pt(i,120);
     var anchor = Math.abs(lp[0]-center)<4 ? 'middle' : (lp[0]>center ? 'start' : 'end');
-    var labelText = hasVal ? m.short : m.short+' (not tested)';
+    var labelText = hasVal ? m.short : m.short+' *';
     svg += '<text x="'+lp[0]+'" y="'+(lp[1]+3)+'" text-anchor="'+anchor+'" font-size="10.5" fill="'+(hasVal?'#5c635f':'#9aa19e')+'"'+(hasVal?'':' font-style="italic"')+'>'+labelText+'</text>';
   });
 
@@ -823,24 +1306,27 @@ function buildRadarSVG(a){
   });
 
   [25,50,75].forEach(function(ring){
-    var ringY = center - radius*(ring/100);
+    var ringY = centerY - radius*(ring/100);
     svg += '<rect x="'+(center+3)+'" y="'+(ringY-6.5)+'" width="24" height="11" fill="#ffffff" opacity="0.9"/>';
     svg += '<text x="'+(center+5)+'" y="'+(ringY+2.5)+'" font-size="8.5" fill="#9aa19e">'+ring+'%</text>';
   });
-  svg += '<rect x="'+(center+3)+'" y="'+(center-radius-6.5)+'" width="30" height="11" fill="#ffffff" opacity="0.9"/>';
-  svg += '<text x="'+(center+5)+'" y="'+(center-radius+2.5)+'" font-size="8.5" fill="#5c635f" font-weight="700">100%</text>';
+  svg += '<rect x="'+(center+3)+'" y="'+(centerY-radius-6.5)+'" width="30" height="11" fill="#ffffff" opacity="0.9"/>';
+  svg += '<text x="'+(center+5)+'" y="'+(centerY-radius+2.5)+'" font-size="8.5" fill="#5c635f" font-weight="700">100%</text>';
 
   svg += '</svg>';
   svg += '<div class="chart-legend">'+
     '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#006747"></span>'+escapeHtml(a.name)+'</span>'+
     '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:#9aa19e"></span>Team average</span>'+
     '</div>';
+  if(anyUntested){
+    svg += '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;font-style:italic;">* Not yet tested</div>';
+  }
   return svg;
 }
 
 /* --- Grouped bar comparison (raw values) --- */
 function buildCompareSVG(a){
-  var axes = METRICS;
+  var axes = RADAR_KEYS.map(metricMeta);
   var width = 320, height = 260;
   var marginLeft = 30, marginRight = 10, marginTop = 20, marginBottom = 46;
   var plotW = width - marginLeft - marginRight;
@@ -954,9 +1440,17 @@ function openProfile(id){
     } else {
       metaHtml = '<div class="m-rank">Team avg: '+(avg!==null?avg.toFixed(1)+' '+meta.unit:'\u2014')+'</div>';
     }
+    var badgeHtml = tierBadgeForCard(key, a);
+    if(key==='powerClean'){
+      var ratioVal = curCleanSquatRatio(a);
+      if(ratioVal!==null){
+        badgeHtml = '<span class="std-badge std-developing">'+ratioVal.toFixed(2)+'\u00d7 squat'+cleanSquatRatioTrendHtml(a)+'</span>';
+      }
+    }
     cardsHtml += '<div class="metric-card">'+
-      '<div class="m-label">'+meta.label+'</div>'+
+      '<div class="m-label">'+meta.label+infoIconHtml(key)+'</div>'+
       '<div class="m-value'+(hasVal?'':' empty')+'">'+valueHtml+(hasVal?trendArrowHtml(a,key):'')+'</div>'+
+      (badgeHtml?'<div class="m-std-row">'+badgeHtml+'</div>':'')+
       metaHtml+
       '</div>';
   });
@@ -994,6 +1488,10 @@ Array.prototype.forEach.call(document.querySelectorAll('.tab-btn'), function(btn
     btn.classList.add('active');
     document.getElementById('panel-'+btn.getAttribute('data-tab')).classList.add('active');
     if(btn.getAttribute('data-tab')==='leaderboard') renderTrendChart();
+    if(btn.getAttribute('data-tab')==='jump') renderJumpChart();
+    if(btn.getAttribute('data-tab')==='conditioning') renderConditioningTab();
+    if(btn.getAttribute('data-tab')==='flags') renderFlags();
+    if(btn.getAttribute('data-tab')==='methodology') renderMethodology();
   });
 });
 
@@ -1208,12 +1706,503 @@ function renderTrendChart(){
   container.innerHTML = svg + legend;
 }
 
+/* --- Approach Jump tab --- */
+var jumpState = {metric:'jumpAvg', view:'team', selected:{}};
+
+document.getElementById('jumpMetricSelect').addEventListener('change', function(){
+  jumpState.metric = this.value;
+  renderJumpChart();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll('#jumpViewToggle button'), function(btn){
+  btn.addEventListener('click', function(){
+    Array.prototype.forEach.call(document.querySelectorAll('#jumpViewToggle button'), function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    jumpState.view = btn.getAttribute('data-view');
+    document.getElementById('jumpAthletePicker').style.display = jumpState.view==='individual' ? 'flex' : 'none';
+    renderJumpChart();
+  });
+});
+
+function populateJumpAthletePicker(){
+  var wrap = document.getElementById('jumpAthletePicker');
+  var sorted = athletes.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  wrap.innerHTML = sorted.map(function(a){
+    var sel = jumpState.selected[a.id] ? ' selected' : '';
+    return '<span class="athlete-chip'+sel+'" data-id="'+a.id+'">'+escapeHtml(a.name)+'</span>';
+  }).join('');
+  Array.prototype.forEach.call(wrap.querySelectorAll('.athlete-chip'), function(chip){
+    chip.addEventListener('click', function(){
+      var id = chip.getAttribute('data-id');
+      if(jumpState.selected[id]){ delete jumpState.selected[id]; chip.classList.remove('selected'); }
+      else { jumpState.selected[id] = true; chip.classList.add('selected'); }
+      renderJumpChart();
+    });
+  });
+}
+
+function renderJumpChart(){
+  var container = document.getElementById('jumpChart');
+  if(!container) return;
+  var key = jumpState.metric;
+  var meta = metricMeta(key);
+  var series = [];
+  if(jumpState.view==='team'){
+    var pts = teamAverageSeries(key);
+    if(pts.length>=1) series = [{label:'Team average', color:'#006747', points:pts}];
+  } else {
+    var ids = Object.keys(jumpState.selected);
+    ids.forEach(function(id, idx){
+      var a = athletes.find(function(x){return x.id===id;});
+      if(!a) return;
+      var p2 = metricSeriesForAthlete(a, key);
+      if(p2.length>0) series.push({label:a.name, color:COLOR_CYCLE[idx % COLOR_CYCLE.length], points:p2});
+    });
+  }
+  var totalPoints = series.reduce(function(s,ser){return s+ser.points.length;},0);
+  if(jumpState.view==='individual' && Object.keys(jumpState.selected).length===0){
+    container.innerHTML = '<div class="chart-empty">Select one or more athletes above to see their trend.</div>';
+    return;
+  }
+  if(totalPoints===0){
+    container.innerHTML = '<div class="chart-empty">No approach jump tests logged yet.</div>';
+    return;
+  }
+  var svg = buildChartSVG(series, {unit:meta.unit}, container.clientWidth || 760);
+  if(!svg){
+    container.innerHTML = '<div class="chart-empty">Not enough test dates yet to plot a trend.</div>';
+    return;
+  }
+  var legend = '<div class="chart-legend">'+series.map(function(s){
+    return '<span class="chart-legend-item"><span class="chart-legend-dot" style="background:'+s.color+'"></span>'+escapeHtml(s.label)+'</span>';
+  }).join('')+'</div>';
+  container.innerHTML = svg + legend;
+}
+
+function renderJumpSnapshot(){
+  var wrap = document.getElementById('jumpSnapshotGrid');
+  var keys = ['jumpAvg','jumpMax'];
+  wrap.innerHTML = keys.map(function(key){
+    var meta = metricMeta(key);
+    var avg = avgFor(key);
+    var rankInfo = rankFor(key);
+    var topId = Object.keys(rankInfo.ranks).find(function(id){return rankInfo.ranks[id]===1;});
+    var topAthlete = topId ? athletes.find(function(a){return a.id===topId;}) : null;
+    var topVal = topAthlete ? valFor(topAthlete,key) : null;
+    var valueHtml = avg!==null ? avg.toFixed(meta.decimals)+'<span class="s-unit">'+meta.unit+'</span>' : '&mdash;';
+    var subHtml = avg!==null
+      ? 'Team avg'+(topAthlete? ' &middot; Top: <b>'+escapeHtml(topAthlete.name)+'</b> ('+topVal.toFixed(meta.decimals)+')' : '')
+      : 'No data yet';
+    return '<div class="snapshot-card"><div class="s-label">'+meta.label+'</div>'+
+      '<div class="s-value">'+valueHtml+'</div>'+
+      '<div class="s-sub">'+subHtml+'</div></div>';
+  }).join('');
+}
+
+function renderJumpTable(){
+  var body = document.getElementById('jumpTableBody');
+  var rows = athletes.slice().sort(function(a,b){ return (a.no||0)-(b.no||0); });
+  body.innerHTML = rows.map(function(a){
+    var avgV = curVal(a,'jumpAvg');
+    var maxV = curVal(a,'jumpMax');
+    var stats = jumpBaselineStats(a,'jumpAvg');
+    var info = jumpReadinessInfo(a,'jumpAvg');
+    var tds = '';
+    tds += '<td>'+(a.no!==null&&a.no!==undefined?a.no:'&mdash;')+'</td>';
+    tds += '<td class="name-cell">'+escapeHtml(a.name)+'</td>';
+    tds += '<td>'+escapeHtml(a.pos||'')+'</td>';
+    tds += cellHtml(avgV, null, 1, '', trendArrowHtml(a,'jumpAvg'));
+    tds += cellHtml(maxV, null, 1, '', trendArrowHtml(a,'jumpMax'));
+    tds += '<td>'+(stats?stats.mean.toFixed(1)+' in':'<span class="cell-empty">&mdash;</span>')+'</td>';
+    tds += '<td>'+(stats?stats.n:'<span class="cell-empty">&mdash;</span>')+'</td>';
+    if(info){
+      var colorVar = info.pctChange>0?'var(--success)':(info.pctChange<0?'var(--danger)':'var(--text-muted)');
+      tds += '<td><span style="font-weight:700;color:'+colorVar+';">'+(info.pctChange>0?'+':'')+info.pctChange.toFixed(1)+'%</span></td>';
+      tds += '<td>'+stdBadgeHtml(info.tier, JUMP_READINESS_STANDARD.tierLabels[info.tier])+'</td>';
+    } else {
+      tds += '<td><span class="cell-empty">&mdash;</span></td>';
+      tds += '<td><span class="cell-empty">&mdash;</span></td>';
+    }
+    return '<tr data-id="'+a.id+'">'+tds+'</tr>';
+  }).join('');
+  Array.prototype.forEach.call(body.querySelectorAll('tr'), function(tr){
+    tr.addEventListener('click', function(){ openProfile(tr.getAttribute('data-id')); });
+  });
+}
+
+function renderJumpTab(){
+  renderJumpSnapshot();
+  renderJumpChart();
+  renderJumpTable();
+}
+
+
+/* --- 23 Test tab --- */
+function renderCondSnapshot(){
+  var wrap = document.getElementById('condSnapshotGrid');
+  var tested = athletes.filter(function(a){ return latestConditioning(a)!==null; });
+  var totalReps = 0, passedReps = 0, fullPass = 0, flagged = 0;
+  tested.forEach(function(a){
+    var e = latestConditioning(a);
+    var p = repsPassed(e);
+    totalReps += 6; passedReps += p;
+    if(p>=6) fullPass++;
+    if(p<=3) flagged++;
+  });
+  var passRate = totalReps>0 ? round1((passedReps/totalReps)*100) : null;
+  var cards = [
+    {label:'Athletes tested', value: tested.length + ' of ' + athletes.length, sub:''},
+    {label:'Team pass rate', value: passRate!==null? passRate.toFixed(0)+'%' : '&mdash;', sub: passRate!==null?'Of all reps attempted':'No tests logged yet'},
+    {label:'Full pass (6/6)', value: tested.length? fullPass+' athlete'+(fullPass===1?'':'s'):'&mdash;', sub:''},
+    {label:'Flagged (\u22643/6)', value: tested.length? flagged+' athlete'+(flagged===1?'':'s'):'&mdash;', sub:'May need extra conditioning work'}
+  ];
+  wrap.innerHTML = cards.map(function(c){
+    return '<div class="snapshot-card"><div class="s-label">'+c.label+'</div><div class="s-value">'+c.value+'</div><div class="s-sub">'+c.sub+'</div></div>';
+  }).join('');
+}
+
+function renderCondTable(){
+  var body = document.getElementById('condTableBody');
+  var rows = athletes.slice().sort(function(a,b){ return (a.no||0)-(b.no||0); });
+  body.innerHTML = rows.map(function(a){
+    var entry = latestConditioning(a);
+    var passed = repsPassed(entry);
+    var tier = conditioningTier(passed);
+    var failRep = firstFailRep(entry);
+    var tds = '';
+    tds += '<td>'+(a.no!==null&&a.no!==undefined?a.no:'&mdash;')+'</td>';
+    tds += '<td class="name-cell">'+escapeHtml(a.name)+'</td>';
+    tds += '<td>'+escapeHtml(a.pos||'')+'</td>';
+    tds += '<td>'+conditioningDotsHtml(entry)+'</td>';
+    tds += '<td>'+(passed!==null ? '<span class="cond-status '+tier+'">'+passed+' / 6</span>' : '<span class="cell-empty">&mdash;</span>')+'</td>';
+    tds += '<td>'+(failRep!==null ? ('Rep '+failRep) : (passed!==null ? '<span style="color:var(--success);font-weight:600;">None</span>' : '<span class="cell-empty">&mdash;</span>'))+'</td>';
+    tds += '<td>'+(entry ? conditioningTrendHtml(a) : '<span class="cell-empty">&mdash;</span>')+'</td>';
+    return '<tr data-id="'+a.id+'">'+tds+'</tr>';
+  }).join('');
+  Array.prototype.forEach.call(body.querySelectorAll('tr'), function(tr){
+    tr.addEventListener('click', function(){ openProfile(tr.getAttribute('data-id')); });
+  });
+}
+
+function renderConditioningTab(){
+  renderCondSnapshot();
+  renderCondTable();
+}
+
+/* --- Flags tab --- */
+function tierGroupsFor(key){
+  var groups = {below:[], developing:[], goal:[], exceptional:[]};
+  var total = 0;
+  athletes.forEach(function(a){
+    var info = tierInfoFor(a, key);
+    if(info){ groups[info.tier].push({a:a, info:info}); total++; }
+  });
+  return {groups:groups, total:total};
+}
+
+var flagTierView = {backSquat:'below', benchPress:'below', deadlift:'below', powerClean:'below'};
+
+function flagRowHtml(rank, a, valueHtml, contextHtml, tier){
+  var tierClass = tier ? ' flag-value-'+tier : ' flag-value-below';
+  return '<div class="flag-row" data-id="'+a.id+'">'+
+    '<span class="flag-rank">'+rank+'</span>'+
+    '<span class="flag-name">'+escapeHtml(a.name)+'<span class="pos-tag">'+escapeHtml(a.pos||'')+'</span></span>'+
+    '<span class="flag-value'+tierClass+'">'+valueHtml+'</span>'+
+    '<span class="flag-context">'+(contextHtml||'')+'</span>'+
+    '</div>';
+}
+
+function wireFlagRows(container){
+  Array.prototype.forEach.call(container.querySelectorAll('.flag-row'), function(row){
+    row.addEventListener('click', function(){ openProfile(row.getAttribute('data-id')); });
+  });
+}
+
+function tierSectionHtml(key){
+  var std = STANDARDS[key];
+  var data = tierGroupsFor(key);
+  var total = data.total;
+  var labels = std.tierLabels;
+  var headHtml = '<div class="std-section-head"><h3>'+escapeHtml(std.label)+infoIconHtml(key)+'</h3></div>';
+  if(total===0){
+    var emptyReason = std.kind==='selfProgress' ? ' \u2014 needs at least two tests on file to measure progress.' : '.';
+    return '<div class="std-section">'+headHtml+'<div class="flag-empty">No data on file yet for this metric'+emptyReason+'</div></div>';
+  }
+  var hasExceptional = std.exceptional!==null && std.exceptional!==undefined || std.kind==='selfProgress';
+  var order = hasExceptional ? TIER_ORDER : ['below','developing','goal'];
+  var segs = order.map(function(t){
+    var n = data.groups[t].length;
+    var pct = total>0 ? (n/total*100) : 0;
+    return '<div class="tier-seg tier-seg-'+t+'" style="width:'+pct+'%;" title="'+labels[t]+': '+n+' athlete'+(n===1?'':'s')+'">'+(pct>=8?n:'')+'</div>';
+  }).join('');
+  var legend = order.map(function(t){
+    return '<span class="tier-legend-item"><span class="tier-legend-dot dot-'+t+'"></span>'+labels[t]+' ('+data.groups[t].length+')</span>';
+  }).join('');
+
+  var activeTier = order.indexOf(flagTierView[key])>=0 ? flagTierView[key] : 'below';
+  var toggleHtml = '<div class="tier-toggle" data-tier-key="'+key+'">'+order.map(function(t){
+    return '<button class="tier-toggle-btn'+(t===activeTier?' active':'')+'" data-tier="'+t+'">'+labels[t]+' ('+data.groups[t].length+')</button>';
+  }).join('')+'</div>';
+
+  var list = data.groups[activeTier].slice().sort(function(x,y){
+    return activeTier==='below' ? x.info.sortValue-y.info.sortValue : y.info.sortValue-x.info.sortValue;
+  });
+  var emptyMsg = 'Nobody currently in the '+labels[activeTier]+' range.';
+  var listHtml = list.length===0
+    ? '<div class="flag-empty" style="padding:10px 0;">'+emptyMsg+'</div>'
+    : list.map(function(r,i){
+        var valStr = r.info.displayValue;
+        var ctxStr;
+        if(std.kind==='selfProgress'){
+          ctxStr = 'since '+(r.info.raw.baselineLabel || formatDateShort(r.info.raw.baselineDate));
+        } else {
+          var raw = curVal(r.a, key);
+          var rawMeta = metricMeta(key);
+          ctxStr = raw!==null ? raw.toFixed(rawMeta.decimals)+' '+rawMeta.unit : '';
+        }
+        return flagRowHtml(i+1, r.a, valStr, ctxStr, r.info.tier);
+      }).join('');
+  return '<div class="std-section">'+headHtml+
+    '<div class="tier-bar">'+segs+'</div>'+
+    '<div class="tier-legend">'+legend+'</div>'+
+    toggleHtml+
+    listHtml+
+  '</div>';
+}
+
+function bottomPercentGroup(pairs, pct){
+  var sorted = pairs.slice().sort(function(x,y){ return y.v-x.v; });
+  var n = sorted.length;
+  var cutoffCount = Math.max(1, Math.round(n*pct/100));
+  return sorted.slice(n-cutoffCount);
+}
+
+function teamRelativeSectionHtml(key){
+  var std = TEAM_RELATIVE_STANDARDS[key];
+  var meta = metricMeta(key);
+  var headHtml = '<div class="std-section-head"><h3>'+escapeHtml(std.label)+
+    '<span class="info-icon" tabindex="0">&#9432;<span class="info-tooltip">'+escapeHtml(std.label)+' \u2014 bottom '+std.pct+'% of the team flagged, team-relative. <em>Full sourcing in the Methodology tab.</em></span></span></h3></div>';
+  var pairs = athletes.map(function(a){
+    var v = curVal(a, key);
+    if(v===null) return null;
+    return {a:a, v:v, display:v.toFixed(meta.decimals)+' '+meta.unit};
+  }).filter(Boolean);
+  if(pairs.length===0){
+    return '<div class="std-section">'+headHtml+'<div class="flag-empty">No test data logged yet for this metric.</div></div>';
+  }
+  var bottom = bottomPercentGroup(pairs, std.pct).sort(function(x,y){ return x.v-y.v; });
+  var listHtml = bottom.map(function(r,i){
+    return flagRowHtml(i+1, r.a, r.display, 'Bottom '+std.pct+'%');
+  }).join('');
+  return '<div class="std-section">'+headHtml+
+    '<div class="std-summary-line">Bottom '+std.pct+'% of '+pairs.length+' tested &middot; '+bottom.length+' shown</div>'+
+    listHtml+
+  '</div>';
+}
+
+function powerCleanDivergenceSectionHtml(){
+  var headHtml = '<div class="std-section-head"><h3>Squat vs. clean divergence'+
+    '<span class="info-icon" tabindex="0">&#9432;<span class="info-tooltip">Flags athletes whose clean:squat ratio dropped since their last test with both lifts on file \u2014 squat climbing while clean stalls is a technical or rate-of-force-development signal worth a look, independent of where the team sits. <em>Full sourcing in the Methodology tab.</em></span></span></h3></div>';
+  var totalWithHistory = athletes.filter(function(a){ return cleanSquatRatioSequence(a).length>=2; }).length;
+  if(totalWithHistory===0){
+    return '<div class="std-section">'+headHtml+'<div class="flag-empty">Needs at least two tests with both squat and power clean on file to compare.</div></div>';
+  }
+  var rows = athletes.map(function(a){
+    var seq = cleanSquatRatioSequence(a);
+    if(seq.length<2) return null;
+    var diff = round2(seq[seq.length-1].value - seq[seq.length-2].value);
+    if(diff>=0) return null;
+    return {a:a, diff:diff, cur:seq[seq.length-1].value};
+  }).filter(Boolean).sort(function(x,y){ return x.diff-y.diff; });
+  var listHtml = rows.length===0
+    ? '<div class="flag-empty" style="padding:10px 0;">Nobody\u2019s ratio has dropped since their last test.</div>'
+    : rows.map(function(r,i){
+        return flagRowHtml(i+1, r.a, r.cur.toFixed(2)+'\u00d7', r.diff.toFixed(2)+' since last test');
+      }).join('');
+  return '<div class="std-section">'+headHtml+
+    '<div class="std-summary-line">'+rows.length+' of '+totalWithHistory+' trending down</div>'+
+    listHtml+
+  '</div>';
+}
+
+function conditioningSectionHtml(){
+  var std = CONDITIONING_STANDARD;
+  var headHtml = '<div class="std-section-head"><h3>'+escapeHtml(std.label)+
+    '<span class="info-icon" tabindex="0">&#9432;<span class="info-tooltip">'+escapeHtml(std.label)+' \u2014 flagged if fewer than '+std.passLine+' of 6 reps passed. <em>Full sourcing in the Methodology tab.</em></span></span></h3></div>';
+  var flagged = [], ok = [];
+  athletes.forEach(function(a){
+    var entry = latestConditioning(a);
+    var passed = repsPassed(entry);
+    if(passed===null) return;
+    (passed<std.passLine ? flagged : ok).push({a:a, passed:passed});
+  });
+  var total = flagged.length+ok.length;
+  if(total===0){
+    return '<div class="std-section">'+headHtml+'<div class="flag-empty">No 23 test data on file yet.</div></div>';
+  }
+  flagged.sort(function(x,y){ return x.passed-y.passed; });
+  var listHtml = flagged.length===0
+    ? '<div class="flag-empty" style="padding:10px 0;">Nobody currently flagged.</div>'
+    : flagged.map(function(r,i){
+        return flagRowHtml(i+1, r.a, r.passed+' / 6', 'Flagged');
+      }).join('');
+  return '<div class="std-section">'+headHtml+
+    '<div class="std-summary-line">'+flagged.length+' of '+total+' flagged &middot; '+ok.length+' within standard</div>'+
+    listHtml+
+  '</div>';
+}
+
+function jumpReadinessFlagSectionHtml(){
+  var std = JUMP_READINESS_STANDARD;
+  var labels = std.tierLabels;
+  var headHtml = '<div class="std-section-head"><h3>'+escapeHtml(std.label)+
+    '<span class="info-icon" tabindex="0">&#9432;<span class="info-tooltip">On track \u226595% of baseline, Monitor 90\u201395%, Below baseline &lt;90%. <em>Full sourcing in the Methodology tab.</em></span></span></h3></div>';
+  var infos = athletes.map(function(a){
+    var info = jumpReadinessInfo(a, 'jumpAvg');
+    return info ? {a:a, info:info} : null;
+  }).filter(Boolean);
+  if(infos.length===0){
+    return '<div class="std-section">'+headHtml+'<div class="flag-empty">No approach jump data on file yet \u2014 needs at least one baseline test and one current test.</div></div>';
+  }
+  var groups = {below:[], developing:[], goal:[]};
+  infos.forEach(function(r){ groups[r.info.tier].push(r); });
+  var total = infos.length;
+  var order = ['below','developing','goal'];
+  var segs = order.map(function(t){
+    var n = groups[t].length;
+    var pct = total>0 ? (n/total*100) : 0;
+    return '<div class="tier-seg tier-seg-'+t+'" style="width:'+pct+'%;" title="'+labels[t]+': '+n+' athlete'+(n===1?'':'s')+'">'+(pct>=8?n:'')+'</div>';
+  }).join('');
+  var legend = order.map(function(t){
+    return '<span class="tier-legend-item"><span class="tier-legend-dot dot-'+t+'"></span>'+labels[t]+' ('+groups[t].length+')</span>';
+  }).join('');
+
+  if(!flagTierView.jumpReadiness) flagTierView.jumpReadiness = 'below';
+  var activeTier = order.indexOf(flagTierView.jumpReadiness)>=0 ? flagTierView.jumpReadiness : 'below';
+  var toggleHtml = '<div class="tier-toggle" data-tier-key="jumpReadiness">'+order.map(function(t){
+    return '<button class="tier-toggle-btn'+(t===activeTier?' active':'')+'" data-tier="'+t+'">'+labels[t]+' ('+groups[t].length+')</button>';
+  }).join('')+'</div>';
+
+  var list = groups[activeTier].slice().sort(function(x,y){ return x.info.pctChange-y.info.pctChange; });
+  var emptyMsg = 'Nobody currently in the '+labels[activeTier]+' range.';
+  var listHtml = list.length===0
+    ? '<div class="flag-empty" style="padding:10px 0;">'+emptyMsg+'</div>'
+    : list.map(function(r,i){
+        return flagRowHtml(i+1, r.a, (r.info.pctChange>0?'+':'')+r.info.pctChange.toFixed(1)+'%', r.info.ratio.toFixed(3)+'\u00d7 baseline', r.info.tier);
+      }).join('');
+  return '<div class="std-section">'+headHtml+
+    '<div class="tier-bar">'+segs+'</div>'+
+    '<div class="tier-legend">'+legend+'</div>'+
+    toggleHtml+
+    listHtml+
+  '</div>';
+}
+
+function renderFlags(){
+  var readinessEl = document.getElementById('flagReadiness');
+  if(readinessEl) readinessEl.innerHTML = jumpReadinessFlagSectionHtml();
+
+  var strengthEl = document.getElementById('flagStrength');
+  if(strengthEl) strengthEl.innerHTML = tierSectionHtml('backSquat') + tierSectionHtml('benchPress') + tierSectionHtml('deadlift');
+
+  var powerCondEl = document.getElementById('flagPowerCond');
+  if(powerCondEl) powerCondEl.innerHTML = teamRelativeSectionHtml('jumpAvg') + teamRelativeSectionHtml('powerClean') + powerCleanDivergenceSectionHtml() + conditioningSectionHtml();
+
+  var panel = document.getElementById('panel-flags');
+  if(!panel) return;
+  Array.prototype.forEach.call(panel.querySelectorAll('.tier-toggle'), function(toggle){
+    var key = toggle.getAttribute('data-tier-key');
+    Array.prototype.forEach.call(toggle.querySelectorAll('.tier-toggle-btn'), function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        flagTierView[key] = btn.getAttribute('data-tier');
+        renderFlags();
+      });
+    });
+  });
+  wireFlagRows(panel);
+
+  Array.prototype.forEach.call(panel.querySelectorAll('[data-goto-tab]'), function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = link.getAttribute('data-goto-tab');
+      var btn = document.querySelector('.tab-btn[data-tab="'+target+'"]');
+      if(btn) btn.click();
+    });
+  });
+}
+
+/* --- Methodology tab --- */
+function methodologyCardHtml(std, kind){
+  var valuesHtml;
+  if(kind==='pct'){
+    valuesHtml = 'Flag bottom <b>'+std.pct+'%</b> of the team';
+  } else if(kind==='threshold'){
+    valuesHtml = 'Flag if fewer than <b>'+std.passLine+' of 6</b> reps passed';
+  } else if(kind==='selfProgress'){
+    valuesHtml = 'Regressed <b>&lt;0%</b> &middot; Maintained <b>0\u2013'+std.bands[1]+'%</b> &middot; Improved <b>'+std.bands[1]+'\u2013'+std.bands[2]+'%</b> &middot; Exceptional <b>'+std.bands[2]+'%+</b> since baseline';
+  } else {
+    valuesHtml = 'Min <b>'+std.min+'\u00d7</b> &middot; Goal <b>'+std.goal+'\u00d7</b>'+(std.exceptional?' &middot; Exceptional <b>'+std.exceptional+'\u00d7</b>':'')+' '+escapeHtml(std.relLabel);
+  }
+  var linkHtml = std.sourceUrl ? '<a class="method-link" href="'+std.sourceUrl+'" target="_blank" rel="noopener">View source &#8599;</a>' : '';
+  return '<div class="method-card">'+
+    '<h3>'+escapeHtml(std.label)+'</h3>'+
+    '<div class="method-values">'+valuesHtml+'</div>'+
+    '<details class="method-details"><summary>Full sourcing</summary>'+
+      '<p class="method-source">'+escapeHtml(std.source)+'</p>'+
+      (std.note ? '<p class="method-note">'+escapeHtml(std.note)+'</p>' : '')+
+      linkHtml+
+    '</details>'+
+  '</div>';
+}
+
+var CLEAN_DIVERGENCE_STANDARD = {
+  label:'Squat vs. clean divergence',
+  source:'Internal S&C reasoning, not an external citation: the power clean is limited by rate of force development and technical proficiency, not maximal strength capacity, so applying one fixed population ratio can misflag athletes in both directions \u2014 technically-limited but strong/powerful athletes look underperforming, while technically-proficient but not-that-strong athletes look fine when their power output isn\u2019t actually where it should be. Tracking each athlete\u2019s own clean:squat ratio over time and flagging a drop since their last test surfaces a real technical or RFD gap, independent of where the team sits.',
+  sourceUrl:null
+};
+
+function renderMethodology(){
+  var body = document.getElementById('methodologyBody');
+  if(!body) return;
+  var jumpReadinessCard = '<div class="method-card">'+
+    '<h3>'+escapeHtml(JUMP_READINESS_STANDARD.label)+'</h3>'+
+    '<div class="method-values">On track <b>\u226595%</b> &middot; Monitor <b>90\u201395%</b> &middot; Below baseline <b>&lt;90%</b></div>'+
+    '<details class="method-details"><summary>Full sourcing</summary>'+
+      '<p class="method-source">'+escapeHtml(JUMP_READINESS_STANDARD.source)+'</p>'+
+      (JUMP_READINESS_STANDARD.note ? '<p class="method-note">'+escapeHtml(JUMP_READINESS_STANDARD.note)+'</p>' : '')+
+      '<a class="method-link" href="'+JUMP_READINESS_STANDARD.sourceUrl+'" target="_blank" rel="noopener">View source &#8599;</a>'+
+    '</details>'+
+  '</div>';
+  var strengthCards = ['backSquat','benchPress','deadlift'].map(function(k){
+    return methodologyCardHtml(STANDARDS[k], STANDARDS[k].kind);
+  }).join('');
+  var jumpCard = methodologyCardHtml(TEAM_RELATIVE_STANDARDS.jumpAvg, 'pct');
+  var cleanRatioCard = methodologyCardHtml(TEAM_RELATIVE_STANDARDS.powerClean, 'pct');
+  var cleanDivergenceCard = '<div class="method-card">'+
+    '<h3>'+escapeHtml(CLEAN_DIVERGENCE_STANDARD.label)+'</h3>'+
+    '<div class="method-values">Flag if clean:squat ratio <b>dropped</b> since last test</div>'+
+    '<details class="method-details"><summary>Full sourcing</summary>'+
+      '<p class="method-source">'+escapeHtml(CLEAN_DIVERGENCE_STANDARD.source)+'</p>'+
+    '</details>'+
+  '</div>';
+  var condCard = methodologyCardHtml(CONDITIONING_STANDARD, 'threshold');
+  body.innerHTML =
+    '<div class="flags-col-head">Readiness</div><div class="method-grid">'+jumpReadinessCard+'</div>'+
+    '<div class="flags-col-head">Strength</div><div class="method-grid">'+strengthCards+'</div>'+
+    '<div class="flags-col-head">Power &amp; conditioning</div><div class="method-grid">'+jumpCard+cleanRatioCard+cleanDivergenceCard+condCard+'</div>';
+}
+
 function renderAll(){
   renderSnapshot();
   renderOverview();
   renderBarList();
   renderLeaderboard();
   renderTrendChart();
+  renderJumpTab();
+  renderConditioningTab();
+  renderFlags();
+  renderMethodology();
 }
 
 function setHeaderMeta(){
@@ -1225,6 +2214,7 @@ loadData();
 populateBarMetricPills();
 populateTrendMetricSelect();
 populateAthletePicker();
+populateJumpAthletePicker();
 renderAll();
 setHeaderMeta();
 
@@ -1234,6 +2224,7 @@ window.addEventListener('resize', function(){
   resizeTimer = setTimeout(function(){
     renderBarList();
     renderTrendChart();
+    renderJumpChart();
   }, 200);
 });
 
