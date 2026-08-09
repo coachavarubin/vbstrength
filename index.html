@@ -511,28 +511,53 @@
   </section>
 
   <section class="panel" id="panel-conditioning">
-    <div class="empty-note">The 23 test: 5-10-15-10-5 yard pyramid shuttle (90 yards/rep), under 23 seconds per rep, 23-second rest, 6 reps total. Currently tracked pass/fail per rep — once rep times are available, this can be upgraded to fade % and buffer tracking.</div>
+    <div class="empty-note">Two separate conditioning tests, scored independently and never compared to each other. <b>Run:</b> 5-10-15-10-5 yd pyramid shuttle, under 23 seconds per rep &mdash; freshmen pass on 3 clean reps, everyone else needs all 6. <b>Bike:</b> assault bike, 12 rounds of 23s on/30s off, scored on total calories against a 105-cal target.</div>
     <div class="snapshot-grid" id="condSnapshotGrid"></div>
+
     <div class="toolbar">
       <div class="toolbar-left">
-        <h2 style="font-size:16px;">Most recent test</h2>
-        <p>Each dot is one rep — filled green means under 23 seconds, hollow red means over. Hover the date for test history.</p>
+        <h2 style="font-size:16px;">Run test</h2>
+        <p>Each dot is one rep, only as many as that athlete needed to run. Filled green means under 23 seconds, hollow red means over.</p>
       </div>
     </div>
-    <div class="table-wrap">
-      <table id="condTable">
+    <div class="table-wrap" style="margin-bottom:26px;">
+      <table id="condRunTable">
         <thead>
           <tr>
             <th>No.</th>
             <th>Name</th>
             <th>Pos.</th>
+            <th>Cl.</th>
             <th>Reps</th>
-            <th>Passed</th>
-            <th>First rep failed</th>
+            <th>Avg time</th>
+            <th>Result</th>
             <th>Vs. last test</th>
           </tr>
         </thead>
-        <tbody id="condTableBody"></tbody>
+        <tbody id="condRunTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <h2 style="font-size:16px;">Bike test</h2>
+        <p>Total calories across all 12 rounds vs. the 105-cal target.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="condBikeTable">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Pos.</th>
+            <th>Total cal</th>
+            <th>Buffer</th>
+            <th>Result</th>
+            <th>Vs. last test</th>
+          </tr>
+        </thead>
+        <tbody id="condBikeTableBody"></tbody>
       </table>
     </div>
   </section>
@@ -684,9 +709,10 @@ function cleanSquatRatioTrendHtml(a){
 
 
 var CONDITIONING_STANDARD = {
-  passLine:4,
+  cap:23,
+  bikeTarget:105,
   label:'23 test',
-  source:'Program standard set directly by the Cleveland State strength & conditioning staff (below 4 of 6 reps passed flags for review), not an external or published figure \u2014 same approach used for lacrosse\u2019s Bronco test threshold.',
+  source:'Program standard set directly by the Cleveland State strength & conditioning staff, not an external or published figure \u2014 same approach used for lacrosse\u2019s Bronco test threshold. Two separate protocols, scored independently and never compared to each other: RUN is a pyramid shuttle (5-10-15-10-5 yd, 90 yd/rep) under 23 seconds per rep, with freshmen passing on 3 clean reps and returners needing all 6; BIKE is an assault bike (12 rounds of 23s on/30s off) scored on total calories against a 105-calorie target.',
   sourceUrl:null
 };
 
@@ -788,24 +814,24 @@ function tierBadgeForCard(key, a){
 }
 
 var RAW_SEED = [
-  {id:'a16', no:16, name:'Abigail Bartolo', pos:'DS', cl:'Fr.', hometown:'Perrysburg, Ohio / Perrysburg', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a17', no:17, name:'Addison Koppelman', pos:'OH', cl:'Fr.', hometown:'Chardon, Ohio / Chardon', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a4', no:4, name:'Alyssa Cerovac', pos:'OH', cl:'Fr.', hometown:'Ancaster, Ontario / Bishop Tonnos Secondary', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a11', no:11, name:'Audrey Ellis', pos:'OH/RS', cl:'Fr.', hometown:'North Canton, Ohio / Hoover', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a1', no:1, name:'Laila Mossey', pos:'DS', cl:'Fr.', hometown:'Aurora, Ill. / Oswego East', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a8', no:8, name:'Sariyah Glanton', pos:'MB', cl:'Fr.', hometown:'St. Louis, Mo. / Hazelwood East', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a26', no:26, name:'Sophie Butler', pos:'MB', cl:'Fr.', hometown:'Toronto, Canada / Birchmont Park Collegiate', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a0', no:0, name:'Jazen Debina', pos:'RS', cl:'Gr.', hometown:'Las Vegas, Nev. / Liberty', prevSchool:'Colorado State', backSquat:172.2, benchPress:127.8, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a15', no:15, name:'Fiona Cooper', pos:'S', cl:'Jr.', hometown:'Richfield, Ohio / Revere', prevSchool:'Wright State', backSquat:116.7, benchPress:116.7, deadlift:194.4, powerClean:106.2, jumpMax:null, jumpAvg:null},
-  {id:'a10', no:10, name:'Julia Jozefov', pos:'MB', cl:'Jr.', hometown:'Brunswick, Ohio / Brunswick', prevSchool:'', backSquat:183.3, benchPress:111.1, deadlift:211.1, powerClean:131.2, jumpMax:null, jumpAvg:null},
-  {id:'a7', no:7, name:'Vayda Delventhal', pos:'DS', cl:'Jr.', hometown:'Northwood, Ohio / Lake', prevSchool:'', backSquat:172.2, benchPress:116.7, deadlift:227.8, powerClean:118.8, jumpMax:null, jumpAvg:null},
-  {id:'a3', no:3, name:'Sophie Skidmore', pos:'OH', cl:'R-Fr.', hometown:'Hudson, Ohio / Hudson', prevSchool:'', backSquat:158.8, benchPress:111.8, deadlift:211.1, powerClean:131.2, jumpMax:null, jumpAvg:null},
-  {id:'a24', no:24, name:'Allison Salazar', pos:'S', cl:'R-So.', hometown:'Medina, Ohio / Buckeye', prevSchool:'', backSquat:172.2, benchPress:127.8, deadlift:227.8, powerClean:118.8, jumpMax:null, jumpAvg:null},
-  {id:'a6', no:6, name:'Bryn VanVleet', pos:'OH', cl:'So.', hometown:'Richmond, Ind. / Seton Catholic', prevSchool:'', backSquat:227.8, benchPress:133.3, deadlift:194.4, powerClean:118.8, jumpMax:null, jumpAvg:null},
-  {id:'a13', no:13, name:'Danica McArthur', pos:'DS', cl:'So.', hometown:'Avon Lake, Ohio / Avon Lake', prevSchool:'', backSquat:150.0, benchPress:94.4, deadlift:194.4, powerClean:106.2, jumpMax:null, jumpAvg:null},
+  {id:'a16', no:16, name:'Abigail Bartolo', pos:'DS', cl:'Fr.', hometown:'Perrysburg, Ohio / Perrysburg', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:22.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:23.4, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[21.24,22.1,22.5,null,null,null]}]},
+  {id:'a17', no:17, name:'Addison Koppelman', pos:'OH', cl:'Fr.', hometown:'Chardon, Ohio / Chardon', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:24, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:21.6, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[21.4,22,22.3,null,null,null]}]},
+  {id:'a4', no:4, name:'Alyssa Cerovac', pos:'OH', cl:'Fr.', hometown:'Ancaster, Ontario / Bishop Tonnos Secondary', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:25.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:21.5, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[22.7,22.8,23,null,null,null]}]},
+  {id:'a11', no:11, name:'Audrey Ellis', pos:'OH/RS', cl:'Fr.', hometown:'North Canton, Ohio / Hoover', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:22.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:22.5, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[22.4,22.56,23.1,null,null,null]}]},
+  {id:'a1', no:1, name:'Laila Mossey', pos:'DS', cl:'Fr.', hometown:'Aurora, Ill. / Oswego East', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:23, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:20, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[21.1,22.5,23,null,null,null]}]},
+  {id:'a8', no:8, name:'Sariyah Glanton', pos:'MB', cl:'Fr.', hometown:'St. Louis, Mo. / Hazelwood East', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:22, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:24.3, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[22.7,22.8,24.09,null,null,null]}]},
+  {id:'a26', no:26, name:'Sophie Butler', pos:'MB', cl:'Fr.', hometown:'Toronto, Canada / Birchmont Park Collegiate', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:26.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:24.6, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[22.4,22.3,22.9,null,null,null]}]},
+  {id:'a0', no:0, name:'Jazen Debina', pos:'RS', cl:'Gr.', hometown:'Las Vegas, Nev. / Liberty', prevSchool:'Colorado State', backSquat:172.2, benchPress:127.8, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:26.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:24.9, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:92}]},
+  {id:'a15', no:15, name:'Fiona Cooper', pos:'S', cl:'Jr.', hometown:'Richfield, Ohio / Revere', prevSchool:'Wright State', backSquat:116.7, benchPress:116.7, deadlift:194.4, powerClean:106.2, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:24.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:22.8, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:111}]},
+  {id:'a10', no:10, name:'Julia Jozefov', pos:'MB', cl:'Jr.', hometown:'Brunswick, Ohio / Brunswick', prevSchool:'', backSquat:183.3, benchPress:111.1, deadlift:211.1, powerClean:131.2, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:23, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:20.9, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:130}]},
+  {id:'a7', no:7, name:'Vayda Delventhal', pos:'DS', cl:'Jr.', hometown:'Northwood, Ohio / Lake', prevSchool:'', backSquat:172.2, benchPress:116.7, deadlift:227.8, powerClean:118.8, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:25.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:22.4, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[null,null,null,null,null,null]}]},
+  {id:'a3', no:3, name:'Sophie Skidmore', pos:'OH', cl:'R-Fr.', hometown:'Hudson, Ohio / Hudson', prevSchool:'', backSquat:158.8, benchPress:111.8, deadlift:211.1, powerClean:131.2, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:19.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:20.3, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:110}]},
+  {id:'a24', no:24, name:'Allison Salazar', pos:'S', cl:'R-So.', hometown:'Medina, Ohio / Buckeye', prevSchool:'', backSquat:172.2, benchPress:127.8, deadlift:227.8, powerClean:118.8, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:24, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:21.3, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:116}]},
+  {id:'a6', no:6, name:'Bryn VanVleet', pos:'OH', cl:'So.', hometown:'Richmond, Ind. / Seton Catholic', prevSchool:'', backSquat:227.8, benchPress:133.3, deadlift:194.4, powerClean:118.8, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:25.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:25.8, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[21.35,21.72,21.7,22.3,22.35,21.9]}]},
+  {id:'a13', no:13, name:'Danica McArthur', pos:'DS', cl:'So.', hometown:'Avon Lake, Ohio / Avon Lake', prevSchool:'', backSquat:150.0, benchPress:94.4, deadlift:194.4, powerClean:106.2, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:20, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:20, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'run', reps:[21.27,21.25,21.6,22.1,22.09,22.4]}]},
   {id:'a9', no:9, name:'Magaly Lemus', pos:'MB', cl:'So.', hometown:'Holland, Mich. / West Ottawa', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null},
-  {id:'a2', no:2, name:'JeriLynn Koehler', pos:'MB', cl:'Sr.', hometown:'New Lexington, Ohio / New Lexington', prevSchool:'', backSquat:150.0, benchPress:105.6, deadlift:183.3, powerClean:106.2, jumpMax:null, jumpAvg:null},
-  {id:'a14', no:14, name:'Reilly Wadden', pos:'DS', cl:'Sr.', hometown:'Lakewood, Ohio / Saint Joseph Academy', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null}
+  {id:'a2', no:2, name:'JeriLynn Koehler', pos:'MB', cl:'Sr.', hometown:'New Lexington, Ohio / New Lexington', prevSchool:'', backSquat:150.0, benchPress:105.6, deadlift:183.3, powerClean:106.2, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:21, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:20, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:111}]},
+  {id:'a14', no:14, name:'Reilly Wadden', pos:'DS', cl:'Sr.', hometown:'Lakewood, Ohio / Saint Joseph Academy', prevSchool:'', backSquat:null, benchPress:null, deadlift:null, powerClean:null, jumpMax:null, jumpAvg:null, extraHistory:[{date:'2026-08-05', label:'Preseason Vertec max', jumpMax:20.5, jumpAvg:null, backSquat:null, benchPress:null, deadlift:null, powerClean:null}, {date:'2026-08-06', label:'Preseason OVR baseline', isBaseline:true, jumpMax:null, jumpAvg:20.5, backSquat:null, benchPress:null, deadlift:null, powerClean:null}], conditioning:[{date:'2026-08-05', modality:'bike', totalCal:97}]}
 ];
 
 var SEED_DATE = '2026-04-01';
@@ -818,6 +844,7 @@ function buildSeedData(){
       backSquat:r.backSquat, benchPress:r.benchPress, deadlift:r.deadlift, powerClean:r.powerClean,
       jumpMax:r.jumpMax, jumpAvg:r.jumpAvg
     }] : [];
+    history = history.concat(r.extraHistory || []);
     return {id:r.id, no:r.no, name:r.name, pos:r.pos, cl:r.cl, hometown:r.hometown, prevSchool:r.prevSchool, history:history, conditioning:(r.conditioning||[])};
   });
 }
@@ -940,40 +967,68 @@ function latestConditioning(a){
   return entries.length ? entries[entries.length-1] : null;
 }
 
-function repsPassed(entry){
-  if(!entry || !entry.reps) return null;
-  return entry.reps.filter(function(r){ return r===true; }).length;
+function latestConditioningByModality(a, modality){
+  var entries = conditioningEntries(a).filter(function(e){ return e.modality===modality; });
+  return entries.length ? entries[entries.length-1] : null;
 }
 
-function firstFailRep(entry){
-  if(!entry || !entry.reps) return null;
-  var idx = entry.reps.findIndex(function(r){ return r===false; });
-  return idx===-1 ? null : idx+1;
+/* Freshmen (exact class 'Fr.') pass on 3 clean reps; everyone else needs all 6. */
+function requiredRunReps(a){
+  return a.cl==='Fr.' ? 3 : 6;
 }
 
-function conditioningTier(passed){
-  if(passed===null || passed===undefined) return null;
-  if(passed>=6) return 'green';
-  if(passed>=4) return 'yellow';
-  return 'red';
+/* {result:'PASS'|'FAIL'|'DNR', repsAttempted, avgTime, required} or null if no run entry */
+function runResult(a, entry){
+  if(!entry || entry.modality!=='run') return null;
+  var required = requiredRunReps(a);
+  var times = (entry.reps||[]).slice(0, required);
+  var attempted = times.filter(function(t){ return t!==null && t!==undefined; });
+  if(attempted.length===0) return {result:'DNR', repsAttempted:0, avgTime:null, required:required};
+  var avgTime = round1(attempted.reduce(function(s,t){return s+t;},0)/attempted.length);
+  var passed = attempted.length>=required && attempted.every(function(t){ return t<=CONDITIONING_STANDARD.cap; });
+  return {result: passed?'PASS':'FAIL', repsAttempted:attempted.length, avgTime:avgTime, required:required};
 }
 
-function conditioningDotsHtml(entry){
-  if(!entry || !entry.reps) return '<span class="cond-dots">' + [1,2,3,4,5,6].map(function(){return '<span class="cond-dot empty"></span>';}).join('') + '</span>';
-  return '<span class="cond-dots">' + entry.reps.map(function(r){
-    return '<span class="cond-dot '+(r?'pass':'fail')+'" title="'+(r?'Passed':'Failed')+'"></span>';
+/* {result:'PASS'|'FAIL', totalCal, buffer} or null if no bike entry */
+function bikeResult(entry){
+  if(!entry || entry.modality!=='bike' || entry.totalCal===null || entry.totalCal===undefined) return null;
+  var buffer = round1(entry.totalCal - CONDITIONING_STANDARD.bikeTarget);
+  var passed = entry.totalCal >= CONDITIONING_STANDARD.bikeTarget;
+  return {result: passed?'PASS':'FAIL', totalCal:entry.totalCal, buffer:buffer};
+}
+
+function runDotsHtml(a, entry){
+  var required = requiredRunReps(a);
+  var times = entry ? (entry.reps||[]).slice(0, required) : [];
+  var slots = [];
+  for(var i=0;i<required;i++){ slots.push(times[i]!==undefined?times[i]:null); }
+  return '<span class="cond-dots">' + slots.map(function(t){
+    if(t===null || t===undefined) return '<span class="cond-dot empty"></span>';
+    var passed = t<=CONDITIONING_STANDARD.cap;
+    return '<span class="cond-dot '+(passed?'pass':'fail')+'" title="'+t.toFixed(2)+'s \u2014 '+(passed?'Passed':'Failed')+'"></span>';
   }).join('') + '</span>';
 }
 
-function conditioningTrendHtml(a){
-  var entries = conditioningEntries(a);
+function conditioningTrendHtml(a, modality){
+  var entries = conditioningEntries(a).filter(function(e){ return e.modality===modality; });
   if(entries.length<2) return '';
-  var cur = repsPassed(entries[entries.length-1]);
-  var prev = repsPassed(entries[entries.length-2]);
-  var diff = cur-prev;
-  if(diff>0) return '<span class="trend-arrow trend-up" title="'+diff+' more rep(s) passed than last test">&#9650;</span>';
-  if(diff<0) return '<span class="trend-arrow trend-down" title="'+Math.abs(diff)+' fewer rep(s) passed than last test">&#9660;</span>';
-  return '<span class="trend-arrow trend-flat" title="Same as last test">&#8211;</span>';
+  if(modality==='run'){
+    var cur = runResult(a, entries[entries.length-1]);
+    var prev = runResult(a, entries[entries.length-2]);
+    if(!cur || !prev || cur.avgTime===null || prev.avgTime===null) return '';
+    var diff = round1(cur.avgTime - prev.avgTime);
+    if(diff<0) return '<span class="trend-arrow trend-up" title="'+Math.abs(diff).toFixed(1)+'s faster than last test">&#9650;</span>';
+    if(diff>0) return '<span class="trend-arrow trend-down" title="'+diff.toFixed(1)+'s slower than last test">&#9660;</span>';
+    return '<span class="trend-arrow trend-flat" title="Same pace as last test">&#8211;</span>';
+  } else {
+    var curB = bikeResult(entries[entries.length-1]);
+    var prevB = bikeResult(entries[entries.length-2]);
+    if(!curB || !prevB) return '';
+    var diffB = round1(curB.totalCal - prevB.totalCal);
+    if(diffB>0) return '<span class="trend-arrow trend-up" title="+'+diffB.toFixed(1)+' cal since last test">&#9650;</span>';
+    if(diffB<0) return '<span class="trend-arrow trend-down" title="'+diffB.toFixed(1)+' cal since last test">&#9660;</span>';
+    return '<span class="trend-arrow trend-flat" title="Same as last test">&#8211;</span>';
+  }
 }
 
 /* --- Approach jump readiness helpers ---
@@ -1840,43 +1895,78 @@ function renderJumpTab(){
 /* --- 23 Test tab --- */
 function renderCondSnapshot(){
   var wrap = document.getElementById('condSnapshotGrid');
-  var tested = athletes.filter(function(a){ return latestConditioning(a)!==null; });
-  var totalReps = 0, passedReps = 0, fullPass = 0, flagged = 0;
-  tested.forEach(function(a){
-    var e = latestConditioning(a);
-    var p = repsPassed(e);
-    totalReps += 6; passedReps += p;
-    if(p>=6) fullPass++;
-    if(p<=3) flagged++;
-  });
-  var passRate = totalReps>0 ? round1((passedReps/totalReps)*100) : null;
+  var runTested = athletes.filter(function(a){ return latestConditioningByModality(a,'run')!==null; });
+  var bikeTested = athletes.filter(function(a){ return latestConditioningByModality(a,'bike')!==null; });
+  var runResults = runTested.map(function(a){ return runResult(a, latestConditioningByModality(a,'run')); });
+  var bikeResults = bikeTested.map(function(a){ return bikeResult(latestConditioningByModality(a,'bike')); }).filter(Boolean);
+  var runPass = runResults.filter(function(r){ return r.result==='PASS'; }).length;
+  var bikePass = bikeResults.filter(function(r){ return r.result==='PASS'; }).length;
+  var totalTested = runTested.length + bikeTested.length;
+  var totalPass = runPass + bikePass;
   var cards = [
-    {label:'Athletes tested', value: tested.length + ' of ' + athletes.length, sub:''},
-    {label:'Team pass rate', value: passRate!==null? passRate.toFixed(0)+'%' : '&mdash;', sub: passRate!==null?'Of all reps attempted':'No tests logged yet'},
-    {label:'Full pass (6/6)', value: tested.length? fullPass+' athlete'+(fullPass===1?'':'s'):'&mdash;', sub:''},
-    {label:'Flagged (\u22643/6)', value: tested.length? flagged+' athlete'+(flagged===1?'':'s'):'&mdash;', sub:'May need extra conditioning work'}
+    {label:'Athletes tested', value: totalTested + ' of ' + athletes.length, sub: runTested.length+' run \u00b7 '+bikeTested.length+' bike'},
+    {label:'Team pass rate', value: totalTested? Math.round((totalPass/totalTested)*100)+'%' : '&mdash;', sub: totalTested?'Across both protocols':'No tests logged yet'},
+    {label:'Run: pass rate', value: runTested.length? runPass+' of '+runTested.length : '&mdash;', sub:'Freshmen need 3 clean reps, others need 6'},
+    {label:'Bike: pass rate', value: bikeTested.length? bikePass+' of '+bikeTested.length : '&mdash;', sub:'105 cal target'}
   ];
   wrap.innerHTML = cards.map(function(c){
     return '<div class="snapshot-card"><div class="s-label">'+c.label+'</div><div class="s-value">'+c.value+'</div><div class="s-sub">'+c.sub+'</div></div>';
   }).join('');
 }
 
-function renderCondTable(){
-  var body = document.getElementById('condTableBody');
-  var rows = athletes.slice().sort(function(a,b){ return (a.no||0)-(b.no||0); });
+function resultBadgeHtml(result){
+  if(result==='PASS') return '<span class="std-badge std-goal">PASS</span>';
+  if(result==='FAIL') return '<span class="std-badge std-below">FAIL</span>';
+  if(result==='DNR') return '<span class="std-badge std-developing">DNR</span>';
+  return '<span class="cell-empty">&mdash;</span>';
+}
+
+function renderCondRunTable(){
+  var body = document.getElementById('condRunTableBody');
+  var rows = athletes.filter(function(a){ return latestConditioningByModality(a,'run')!==null; })
+    .sort(function(a,b){ return (a.no||0)-(b.no||0); });
+  if(rows.length===0){
+    body.innerHTML = '<tr><td colspan="8" class="flag-empty">No run test data logged yet.</td></tr>';
+    return;
+  }
   body.innerHTML = rows.map(function(a){
-    var entry = latestConditioning(a);
-    var passed = repsPassed(entry);
-    var tier = conditioningTier(passed);
-    var failRep = firstFailRep(entry);
+    var entry = latestConditioningByModality(a,'run');
+    var res = runResult(a, entry);
     var tds = '';
     tds += '<td>'+(a.no!==null&&a.no!==undefined?a.no:'&mdash;')+'</td>';
     tds += '<td class="name-cell">'+escapeHtml(a.name)+'</td>';
     tds += '<td>'+escapeHtml(a.pos||'')+'</td>';
-    tds += '<td>'+conditioningDotsHtml(entry)+'</td>';
-    tds += '<td>'+(passed!==null ? '<span class="cond-status '+tier+'">'+passed+' / 6</span>' : '<span class="cell-empty">&mdash;</span>')+'</td>';
-    tds += '<td>'+(failRep!==null ? ('Rep '+failRep) : (passed!==null ? '<span style="color:var(--success);font-weight:600;">None</span>' : '<span class="cell-empty">&mdash;</span>'))+'</td>';
-    tds += '<td>'+(entry ? conditioningTrendHtml(a) : '<span class="cell-empty">&mdash;</span>')+'</td>';
+    tds += '<td>'+escapeHtml(a.cl||'')+'</td>';
+    tds += '<td>'+runDotsHtml(a, entry)+'</td>';
+    tds += '<td>'+(res && res.avgTime!==null ? res.avgTime.toFixed(2)+'s' : '<span class="cell-empty">&mdash;</span>')+'</td>';
+    tds += '<td>'+resultBadgeHtml(res?res.result:null)+'</td>';
+    tds += '<td>'+conditioningTrendHtml(a,'run')+'</td>';
+    return '<tr data-id="'+a.id+'">'+tds+'</tr>';
+  }).join('');
+  Array.prototype.forEach.call(body.querySelectorAll('tr'), function(tr){
+    tr.addEventListener('click', function(){ openProfile(tr.getAttribute('data-id')); });
+  });
+}
+
+function renderCondBikeTable(){
+  var body = document.getElementById('condBikeTableBody');
+  var rows = athletes.filter(function(a){ return latestConditioningByModality(a,'bike')!==null; })
+    .sort(function(a,b){ return (a.no||0)-(b.no||0); });
+  if(rows.length===0){
+    body.innerHTML = '<tr><td colspan="7" class="flag-empty">No bike test data logged yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = rows.map(function(a){
+    var entry = latestConditioningByModality(a,'bike');
+    var res = bikeResult(entry);
+    var tds = '';
+    tds += '<td>'+(a.no!==null&&a.no!==undefined?a.no:'&mdash;')+'</td>';
+    tds += '<td class="name-cell">'+escapeHtml(a.name)+'</td>';
+    tds += '<td>'+escapeHtml(a.pos||'')+'</td>';
+    tds += '<td>'+(res?res.totalCal:'<span class="cell-empty">&mdash;</span>')+'</td>';
+    tds += '<td>'+(res ? (res.buffer>0?'+':'')+res.buffer.toFixed(0) : '<span class="cell-empty">&mdash;</span>')+'</td>';
+    tds += '<td>'+resultBadgeHtml(res?res.result:null)+'</td>';
+    tds += '<td>'+conditioningTrendHtml(a,'bike')+'</td>';
     return '<tr data-id="'+a.id+'">'+tds+'</tr>';
   }).join('');
   Array.prototype.forEach.call(body.querySelectorAll('tr'), function(tr){
@@ -1886,7 +1976,8 @@ function renderCondTable(){
 
 function renderConditioningTab(){
   renderCondSnapshot();
-  renderCondTable();
+  renderCondRunTable();
+  renderCondBikeTable();
 }
 
 /* --- Flags tab --- */
@@ -2028,23 +2119,32 @@ function powerCleanDivergenceSectionHtml(){
 function conditioningSectionHtml(){
   var std = CONDITIONING_STANDARD;
   var headHtml = '<div class="std-section-head"><h3>'+escapeHtml(std.label)+
-    '<span class="info-icon" tabindex="0">&#9432;<span class="info-tooltip">'+escapeHtml(std.label)+' \u2014 flagged if fewer than '+std.passLine+' of 6 reps passed. <em>Full sourcing in the Methodology tab.</em></span></span></h3></div>';
+    '<span class="info-icon" tabindex="0">&#9432;<span class="info-tooltip">Run: freshmen need 3 clean reps under 23s, others need all 6. Bike: total calories must reach 105. <em>Full sourcing in the Methodology tab.</em></span></span></h3></div>';
   var flagged = [], ok = [];
   athletes.forEach(function(a){
-    var entry = latestConditioning(a);
-    var passed = repsPassed(entry);
-    if(passed===null) return;
-    (passed<std.passLine ? flagged : ok).push({a:a, passed:passed});
+    var runEntry = latestConditioningByModality(a,'run');
+    var bikeEntry = latestConditioningByModality(a,'bike');
+    if(runEntry){
+      var rr = runResult(a, runEntry);
+      if(rr.result==='PASS') ok.push({a:a});
+      else flagged.push({a:a, label: rr.result==='DNR' ? 'Did not run' : (rr.avgTime!==null ? rr.avgTime.toFixed(2)+'s avg' : 'Failed'), modality:'Run'});
+    }
+    if(bikeEntry){
+      var br = bikeResult(bikeEntry);
+      if(br){
+        if(br.result==='PASS') ok.push({a:a});
+        else flagged.push({a:a, label: br.totalCal+' cal ('+(br.buffer>0?'+':'')+br.buffer.toFixed(0)+')', modality:'Bike'});
+      }
+    }
   });
   var total = flagged.length+ok.length;
   if(total===0){
     return '<div class="std-section">'+headHtml+'<div class="flag-empty">No 23 test data on file yet.</div></div>';
   }
-  flagged.sort(function(x,y){ return x.passed-y.passed; });
   var listHtml = flagged.length===0
     ? '<div class="flag-empty" style="padding:10px 0;">Nobody currently flagged.</div>'
     : flagged.map(function(r,i){
-        return flagRowHtml(i+1, r.a, r.passed+' / 6', 'Flagged');
+        return flagRowHtml(i+1, r.a, r.label, r.modality);
       }).join('');
   return '<div class="std-section">'+headHtml+
     '<div class="std-summary-line">'+flagged.length+' of '+total+' flagged &middot; '+ok.length+' within standard</div>'+
@@ -2138,7 +2238,7 @@ function methodologyCardHtml(std, kind){
   if(kind==='pct'){
     valuesHtml = 'Flag bottom <b>'+std.pct+'%</b> of the team';
   } else if(kind==='threshold'){
-    valuesHtml = 'Flag if fewer than <b>'+std.passLine+' of 6</b> reps passed';
+    valuesHtml = 'Run: <b>3 reps</b> (Fr.) or <b>6 reps</b> (others) under 23s &middot; Bike: <b>\u2265105 cal</b>';
   } else if(kind==='selfProgress'){
     valuesHtml = 'Regressed <b>&lt;0%</b> &middot; Maintained <b>0\u2013'+std.bands[1]+'%</b> &middot; Improved <b>'+std.bands[1]+'\u2013'+std.bands[2]+'%</b> &middot; Exceptional <b>'+std.bands[2]+'%+</b> since baseline';
   } else {
